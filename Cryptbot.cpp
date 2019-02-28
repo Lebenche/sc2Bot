@@ -505,7 +505,7 @@ int32_t CryptBot::GetCurrentMaxSupply()
 void CryptBot::OnGameStart()
 {
 	const Units NewUnits = Observation()->GetUnits();
-	Actions()->SendChat("Go go go go !");
+	Actions()->SendChat("go go go go! !");
 	//if (observation()->)
 	for (auto &u : NewUnits)
 	{
