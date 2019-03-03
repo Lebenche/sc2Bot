@@ -1163,7 +1163,8 @@ void CryptBot::OnStep() {
 
 	CheckScouting(observation);
 	EconStrat(observation);
-	
+	TryBuildArmy(observation);
+
 	if (CurrentGameLoop < 7000 && !RushPylonDestroyed)
 	{
 		TryBuildCannonRush(observation);
@@ -1199,7 +1200,7 @@ void CryptBot::OnStep() {
 
 void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 {
-	if (observation->GetMinerals() < 250 || observation->GetVespene() < 150)
+	if (observation->GetMinerals() < 100 || observation->GetVespene() < 0)
 	{
 		return;
 	}
@@ -1207,6 +1208,12 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 	Units fleetbecons = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_FLEETBEACON));
 
 	Units portal = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_GATEWAY));
+	if (portal.size() <2) {
+		TryBuildStructureNearPylon(ABILITY_ID::BUILD_GATEWAY, UNIT_TYPEID::PROTOSS_PROBE);
+
+
+	}
+
 	if (portal.size() > 0)
 	{
 		if (observation->GetMinerals() > 100 && observation->GetVespene() > 0)
@@ -1215,6 +1222,8 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 			{
 				if (Gateway->orders.empty())
 				{
+					Actions()->SendChat("Zealot en construction !");
+
 					Actions()->UnitCommand(Gateway, ABILITY_ID::TRAIN_ZEALOT);
 				}
 			}
@@ -1364,6 +1373,14 @@ void CryptBot::TryBuildBuildings(const ObservationInterface* observation)
 		TryBuildStructureNearPylon(ABILITY_ID::BUILD_PHOTONCANNON, UNIT_TYPEID::PROTOSS_PROBE);
 	}
 	size_t gateway_count = CountUnitType(observation, UNIT_TYPEID::PROTOSS_GATEWAY) + CountUnitType(observation, UNIT_TYPEID::PROTOSS_WARPGATE);
+	if (gateway_count <= 0)
+	{
+		if (observation->GetMinerals() > 150) {
+
+			TryBuildStructureNearPylon(ABILITY_ID::BUILD_GATEWAY, UNIT_TYPEID::PROTOSS_PROBE);
+		}
+		return;
+	}
 	if (gateway_count < 1)
 	{ 
 		if (observation->GetMinerals() > 150) {
