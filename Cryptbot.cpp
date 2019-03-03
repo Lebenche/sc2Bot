@@ -1205,7 +1205,23 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 	}
 	Units Stargates = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_STARGATE));
 	Units fleetbecons = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_FLEETBEACON));
-	if (fleetbecons.size() > 0)
+
+	Units portal = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_GATEWAY));
+	if (portal.size() > 0)
+	{
+		if (observation->GetMinerals() > 100 && observation->GetVespene() > 0)
+		{
+			for (const auto& Gateway : portal)
+			{
+				if (Gateway->orders.empty())
+				{
+					Actions()->UnitCommand(Gateway, ABILITY_ID::TRAIN_ZEALOT);
+				}
+			}
+		}
+	}
+
+	/*if (fleetbecons.size() > 0)
 	{
 		if (observation->GetMinerals() > 350 && observation->GetVespene() > 250)
 		{
@@ -1227,7 +1243,7 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 				Actions()->UnitCommand(Stargate, ABILITY_ID::TRAIN_VOIDRAY);
 			}
 		}
-	}
+	}*/
 }
 
 void CryptBot::TryBuildAltArmy(const ObservationInterface* observation)

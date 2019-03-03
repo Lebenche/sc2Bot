@@ -1,0 +1,11 @@
+﻿  Cryptbot.cpp
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(356): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1492): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1503): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1771): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  CryptbotMain.cpp
+  Strategys.cpp
+  Génération de code en cours...
+     Création de la bibliothèque C:\Users\saidb\Documents\GitHub\sc2Bot\x64\Debug\CryptBot.lib et de l'objet C:\Users\saidb\Documents\GitHub\sc2Bot\x64\Debug\CryptBot.exp
+LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'LIBCMT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
+  CryptBot.vcxproj -> C:\Users\saidb\Documents\GitHub\sc2Bot\x64\Debug\CryptBot.exe
