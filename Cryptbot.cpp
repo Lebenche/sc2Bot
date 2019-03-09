@@ -1129,7 +1129,10 @@ void CryptBot::CheckScouting(const ObservationInterface *observation)
 }
 
 void CryptBot::OnStep() {
+
 	const ObservationInterface* observation = Observation();
+	TryBuildArmy(observation);
+
 	if (!observation)
 	{
 		return;
@@ -1158,12 +1161,12 @@ void CryptBot::OnStep() {
 	CurrentMaxSupply = GetCurrentMaxSupply();
 	if (RushLocation == Point2D(0.0f, 0.0f))
 	{
-		std::cout << "Null rush location";
+		//std::cout << "Null rush location";
 	}
 
 	CheckScouting(observation);
 	EconStrat(observation);
-	TryBuildArmy(observation);
+	//TryBuildArmy(observation);
 
 	if (CurrentGameLoop < 7000 && !RushPylonDestroyed)
 	{
@@ -1200,20 +1203,63 @@ void CryptBot::OnStep() {
 
 void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 {
+	//std::cout << "Build Army !";
 	if (observation->GetMinerals() < 100 || observation->GetVespene() < 0)
 	{
 		return;
 	}
-	Units Stargates = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_STARGATE));
-	Units fleetbecons = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_FLEETBEACON));
+	//Units Stargates = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_STARGATE));
+	//Units fleetbecons = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_FLEETBEACON));
 
-	Units portal = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_GATEWAY));
-	if (portal.size() <2) {
-		TryBuildStructureNearPylon(ABILITY_ID::BUILD_GATEWAY, UNIT_TYPEID::PROTOSS_PROBE);
+//	Units portal = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_GATEWAY));
+
+	Units barracks = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BARRACKS));
+	Units depot = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SUPPLYDEPOT));
+	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
+	Units enemy_units = observation->GetUnits(Unit::Alliance::Enemy, IsAttackable());
+	 const GameInfo& game_info = Observation()->GetGameInfo();
+	if (depot.size() < 2) {
+		TryBuildStructure(ABILITY_ID::BUILD_SUPPLYDEPOT, UNIT_TYPEID::TERRAN_SCV);
+
+	}
+	if (barracks.size() < 2 && depot.size() >= 2) {
+		TryBuildStructure(ABILITY_ID::BUILD_BARRACKS, UNIT_TYPEID::TERRAN_SCV);
 
 
 	}
+	if (observation->GetMinerals() > 50 && marine.size()<= 20)
+	{
+		for (const auto& Barracks : barracks)
+		{
+			if (Barracks->orders.empty())
+			{
+				//Actions()->SendChat("Marines en construction !");
 
+				Actions()->UnitCommand(Barracks, ABILITY_ID::TRAIN_MARINE);
+			}
+		}
+	}
+	/*
+	for (const Unit *Marine : marine)
+	{
+		if (marine.size() >= 5)
+		{
+			Actions()->UnitCommand(Marine, ABILITY_ID::ATTACK, enemy_units.front());
+			return;
+		}
+	} */
+
+	if (marine.size() >= 15)
+	{
+		Actions()->UnitCommand(marine, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
+
+	} 
+	/*if (portal.size() <2) {
+		TryBuildStructureNearPylon(ABILITY_ID::BUILD_GATEWAY, UNIT_TYPEID::PROTOSS_PROBE);
+
+
+	} */
+	/*
 	if (portal.size() > 0)
 	{
 		if (observation->GetMinerals() > 100 && observation->GetVespene() > 0)
@@ -1228,7 +1274,7 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 				}
 			}
 		}
-	}
+	} */
 
 	/*if (fleetbecons.size() > 0)
 	{

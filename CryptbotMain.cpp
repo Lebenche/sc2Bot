@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
 	coordinator.SetRealtime(false);
 	coordinator.SetMultithreaded(true);
 	coordinator.SetParticipants({
-		CreateParticipant(sc2::Race::Protoss, &bot),
+		CreateParticipant(sc2::Race::Terran, &bot),
 		//sc2::PlayerSetup(sc2::PlayerType::Observer,Util::GetRaceFromString(enemyRaceString)),
 		CreateComputer(sc2::Race::Protoss, sc2::Difficulty::Easy)
 	});
