@@ -58,6 +58,8 @@ public:
     bool TryBuildStructureNearPylon(AbilityID ability_type_for_structure, UnitTypeID unit_type, Point2D NearPoint, bool UseScout = false);
     void ExcludeRushPylons(std::vector<PowerSource>& PowerSources);
     void TryBuildArmy(const ObservationInterface * observation);
+	void BuildBuildings(const ObservationInterface * observation);
+	void CryptBot::CheckSCV(const ObservationInterface* observation);
 	void TryBuildAltArmy(const ObservationInterface * observation);
     void TryBuildCannonRush(const ObservationInterface * observation);
 	void TryBuildAltStrategy(const ObservationInterface * observation);

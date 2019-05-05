@@ -489,11 +489,11 @@ int32_t CryptBot::GetCurrentMaxSupply()
 	const Units NewUnits = Observation()->GetUnits();
 	for (auto &u : NewUnits)
 	{
-		if (u->unit_type == UNIT_TYPEID::PROTOSS_NEXUS && u->build_progress == 1.0f)
+		if (u->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER && u->build_progress == 1.0f)
 		{
 			MaxSupply += 15;
 		} 
-		else if (u->unit_type == UNIT_TYPEID::PROTOSS_PYLON && u->build_progress == 1.0f)
+		else if (u->unit_type == UNIT_TYPEID::TERRAN_SUPPLYDEPOT && u->build_progress == 1.0f)
 		{
 			MaxSupply += 8;
 		}
@@ -889,7 +889,7 @@ void CryptBot::OnUnitIdle(const Unit *unit) {
 
 	}
 	switch (unit->unit_type.ToType()) {
-	case UNIT_TYPEID::PROTOSS_PROBE: {
+	case UNIT_TYPEID::TERRAN_SCV: {
 		if (unit->tag != ScoutingUnitTag)
 		{
 			uint64_t valid_mineral_patch;
@@ -1131,8 +1131,10 @@ void CryptBot::CheckScouting(const ObservationInterface *observation)
 void CryptBot::OnStep() {
 
 	const ObservationInterface* observation = Observation();
+	BuildBuildings(observation);
+	
 	TryBuildArmy(observation);
-
+	CheckSCV(observation);
 	if (!observation)
 	{
 		return;
@@ -1200,10 +1202,47 @@ void CryptBot::OnStep() {
 	}
 
 }
+void CryptBot :: CheckSCV(const ObservationInterface* observation) {
+	Units SCV = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SCV));
+	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
 
+	
+	if (SCV.size() < 14) {
+		Actions()->UnitCommand(bases, ABILITY_ID::TRAIN_SCV);
+
+	}
+
+}
+void CryptBot::BuildBuildings(const ObservationInterface* observation) {
+	Units depot = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SUPPLYDEPOT));
+	Units refinery = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REFINERY));
+	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
+	Units cmdCenter = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_COMMANDCENTER));
+
+	if (observation->GetMinerals() > 100 && GetCurrentMaxSupply()<60 ) {
+		//observation->GetFoodUsed() >= GetCurrentMaxSupply() - 2
+		TryBuildStructure(ABILITY_ID::BUILD_SUPPLYDEPOT, UNIT_TYPEID::TERRAN_SCV);
+
+	}
+	if (observation->GetMinerals() > 75 && refinery.size() < 1) {
+		//TryBuildStructure(ABILITY_ID::BUILD_REFINERY, UNIT_TYPEID::TERRAN_SCV);
+		for (const auto& base : bases)
+		{
+			BuildAvailableGeaser(ABILITY_ID::BUILD_REFINERY, UNIT_TYPEID::TERRAN_SCV, base->pos);
+
+		}
+
+	}
+
+	if (observation->GetMinerals() > 500 && depot.size() > 2) {
+		//TryBuildStructure(ABILITY_ID::BUILD_COMMANDCENTER, UNIT_TYPEID::TERRAN_SCV);
+
+	}
+}
 void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 {
 	//std::cout << "Build Army !";
+
 	if (observation->GetMinerals() < 100 || observation->GetVespene() < 0)
 	{
 		return;
@@ -1212,22 +1251,26 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 	//Units fleetbecons = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_FLEETBEACON));
 
 //	Units portal = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_GATEWAY));
-
 	Units barracks = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BARRACKS));
-	Units depot = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SUPPLYDEPOT));
+	Units refinery = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REFINERY));
+	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
+
 	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
+	Units reaper = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REAPER));
+	Units depot = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SUPPLYDEPOT));
+
 	Units enemy_units = observation->GetUnits(Unit::Alliance::Enemy, IsAttackable());
 	 const GameInfo& game_info = Observation()->GetGameInfo();
-	if (depot.size() < 2) {
-		TryBuildStructure(ABILITY_ID::BUILD_SUPPLYDEPOT, UNIT_TYPEID::TERRAN_SCV);
+	
+	 float rx = GetRandomScalar();
+	 float ry = GetRandomScalar();
+	if (barracks.size() < 2 && depot.size() >= 2 && observation->GetMinerals() > 150) {
+		TryBuildStructure(ABILITY_ID::BUILD_BARRACKS, UNIT_TYPEID::TERRAN_SCV /*,Point2D( rx+ 65.0f, ry+55.0f)*/);
+
 
 	}
-	if (barracks.size() < 2 && depot.size() >= 2) {
-		TryBuildStructure(ABILITY_ID::BUILD_BARRACKS, UNIT_TYPEID::TERRAN_SCV);
-
-
-	}
-	if (observation->GetMinerals() > 50 && marine.size()<= 20)
+	
+	if (observation->GetMinerals() > 50 && marine.size()<= 30)
 	{
 		for (const auto& Barracks : barracks)
 		{
@@ -1236,22 +1279,19 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 				//Actions()->SendChat("Marines en construction !");
 
 				Actions()->UnitCommand(Barracks, ABILITY_ID::TRAIN_MARINE);
+				Actions()->UnitCommand(Barracks, ABILITY_ID::TRAIN_REAPER);
+
 			}
 		}
+		
 	}
-	/*
-	for (const Unit *Marine : marine)
-	{
-		if (marine.size() >= 5)
-		{
-			Actions()->UnitCommand(Marine, ABILITY_ID::ATTACK, enemy_units.front());
-			return;
-		}
-	} */
+	
 
 	if (marine.size() >= 15)
 	{
 		Actions()->UnitCommand(marine, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
+		Actions()->UnitCommand(reaper, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
+
 
 	} 
 	/*if (portal.size() <2) {
