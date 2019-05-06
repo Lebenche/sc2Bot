@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{ACB84C42-74FB-418C-BC59-6EED4AEB2AC2}</ProjectGuid>
     <RootNamespace>CryptBot</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,12 +71,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.exe</TargetExt>
-    <IncludePath>C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\build\generated;C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\project\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\build\bin;C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\project\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\IA_Starcraft\s2client-api\build\generated;D:\IA_Starcraft\s2client-api\project\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\IA_Starcraft\s2client-api\build\bin;D:\IA_Starcraft\s2client-api\project\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\build\generated;C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\project\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\build\bin;C:\Users\saidb\Documents\STMN\2A\IA\s2client-api\project\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\IA_Starcraft\s2client-api\build\generated;D:\IA_Starcraft\s2client-api\project\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\IA_Starcraft\s2client-api\build\bin;D:\IA_Starcraft\s2client-api\project\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -133,11 +133,13 @@
   <ItemGroup>
     <ClCompile Include="Cryptbot.cpp" />
     <ClCompile Include="CryptbotMain.cpp" />
+    <ClCompile Include="Mazzer_bot.cpp" />
     <ClCompile Include="Strategys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cryptbot.h" />
     <ClInclude Include="LadderInterface.h" />
+    <ClInclude Include="Mazzer_bot.h" />
     <ClInclude Include="Strategys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

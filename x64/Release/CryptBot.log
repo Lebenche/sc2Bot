@@ -1,0 +1,14 @@
+﻿  Cryptbot.cpp
+d:\ia_starcraft\cryptbot\cryptbot.cpp(356): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+d:\ia_starcraft\cryptbot\cryptbot.cpp(1474): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+d:\ia_starcraft\cryptbot\cryptbot.cpp(1485): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+d:\ia_starcraft\cryptbot\cryptbot.cpp(1753): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  CryptbotMain.cpp
+  Strategys.cpp
+     Création de la bibliothèque D:\IA_Starcraft\CryptBot\x64\Release\CryptBot.lib et de l'objet D:\IA_Starcraft\CryptBot\x64\Release\CryptBot.exp
+  Génération de code en cours
+  3 of 1613 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  CryptBot.vcxproj -> D:\IA_Starcraft\CryptBot\x64\Release\CryptBot.exe
