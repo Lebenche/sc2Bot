@@ -1056,7 +1056,7 @@ bool CryptBot::TryExpand(const ObservationInterface* observation)
 		}
 
 		if (current_distance < minimum_distance) {
-			if (Query()->Placement(ABILITY_ID::BUILD_NEXUS, expansion)) {
+			if (Query()->Placement(ABILITY_ID::BUILD_COMMANDCENTER, expansion)) {
 				closest_expansion = expansion;
 				minimum_distance = current_distance;
 			}
@@ -1254,6 +1254,11 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 	Units barracks = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BARRACKS));
 	Units refinery = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REFINERY));
 	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
+	//TERRAN_FACTORYFLYING
+	Units factory = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_FACTORY));
+	Units spatioPort = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_STARPORT));
+	Units bunker = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BUNKER));
+	Units spatioTech = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_STARPORTTECHLAB));
 
 	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
 	Units reaper = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REAPER));
@@ -1280,7 +1285,8 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 
 				Actions()->UnitCommand(Barracks, ABILITY_ID::TRAIN_MARINE);
 				Actions()->UnitCommand(Barracks, ABILITY_ID::TRAIN_REAPER);
-
+				//Units units = observation->GetUnits(Unit::Alliance::Self, IsUnit(unit_type));
+				//units[0];
 			}
 		}
 		
@@ -1294,6 +1300,9 @@ void CryptBot::TryBuildArmy(const ObservationInterface* observation)
 
 
 	} 
+	if (barracks.size() > 1) {
+		//barracks= observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_FACTORYFLYING));
+	}
 	/*if (portal.size() <2) {
 		TryBuildStructureNearPylon(ABILITY_ID::BUILD_GATEWAY, UNIT_TYPEID::PROTOSS_PROBE);
 

@@ -1,6 +1,6 @@
 ﻿  Cryptbot.cpp
 c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(356): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
-c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1595): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
-c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1606): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
-c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1874): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1603): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1614): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\cryptbot.cpp(1882): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
   CryptBot.vcxproj -> C:\Users\saidb\Documents\GitHub\sc2Bot\x64\Debug\CryptBot.exe
