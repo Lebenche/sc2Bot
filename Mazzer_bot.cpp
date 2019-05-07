@@ -127,6 +127,76 @@ struct IsArmy {
 	}
 };
 
+struct IsBuilding {
+	bool operator()(const sc2::Unit & unit)
+	{
+		switch (unit.unit_type.ToType())
+		{
+		case sc2::UNIT_TYPEID::TERRAN_ARMORY:           return true;
+		case sc2::UNIT_TYPEID::PROTOSS_ASSIMILATOR:     return true;
+		case sc2::UNIT_TYPEID::ZERG_BANELINGNEST:       return true;
+		case sc2::UNIT_TYPEID::TERRAN_BARRACKS:         return true;
+		case sc2::UNIT_TYPEID::TERRAN_BARRACKSREACTOR:  return true;
+		case sc2::UNIT_TYPEID::TERRAN_BARRACKSTECHLAB:  return true;
+		case sc2::UNIT_TYPEID::TERRAN_BUNKER:           return true;
+		case sc2::UNIT_TYPEID::TERRAN_COMMANDCENTER:    return true;
+		case sc2::UNIT_TYPEID::PROTOSS_CYBERNETICSCORE: return true;
+		case sc2::UNIT_TYPEID::PROTOSS_DARKSHRINE:      return true;
+		case sc2::UNIT_TYPEID::TERRAN_ENGINEERINGBAY:   return true;
+		case sc2::UNIT_TYPEID::ZERG_EVOLUTIONCHAMBER:   return true;
+		case sc2::UNIT_TYPEID::ZERG_EXTRACTOR:          return true;
+		case sc2::UNIT_TYPEID::TERRAN_FACTORY:          return true;
+		case sc2::UNIT_TYPEID::TERRAN_FACTORYREACTOR:   return true;
+		case sc2::UNIT_TYPEID::TERRAN_FACTORYTECHLAB:   return true;
+		case sc2::UNIT_TYPEID::PROTOSS_FLEETBEACON:     return true;
+		case sc2::UNIT_TYPEID::PROTOSS_FORGE:           return true;
+		case sc2::UNIT_TYPEID::TERRAN_FUSIONCORE:       return true;
+		case sc2::UNIT_TYPEID::PROTOSS_GATEWAY:         return true;
+		case sc2::UNIT_TYPEID::PROTOSS_WARPGATE:        return true;
+		case sc2::UNIT_TYPEID::TERRAN_GHOSTACADEMY:     return true;
+		case sc2::UNIT_TYPEID::ZERG_HATCHERY:           return true;
+		case sc2::UNIT_TYPEID::ZERG_HYDRALISKDEN:       return true;
+		case sc2::UNIT_TYPEID::ZERG_INFESTATIONPIT:     return true;
+		case sc2::UNIT_TYPEID::TERRAN_MISSILETURRET:    return true;
+		case sc2::UNIT_TYPEID::PROTOSS_NEXUS:           return true;
+		case sc2::UNIT_TYPEID::ZERG_NYDUSCANAL:         return true;
+		case sc2::UNIT_TYPEID::ZERG_NYDUSNETWORK:       return true;
+		case sc2::UNIT_TYPEID::PROTOSS_PHOTONCANNON:    return true;
+		case sc2::UNIT_TYPEID::PROTOSS_PYLON:           return true;
+		case sc2::UNIT_TYPEID::TERRAN_REFINERY:         return true;
+		case sc2::UNIT_TYPEID::ZERG_ROACHWARREN:        return true;
+		case sc2::UNIT_TYPEID::PROTOSS_ROBOTICSBAY:     return true;
+		case sc2::UNIT_TYPEID::PROTOSS_ROBOTICSFACILITY: return true;
+		case sc2::UNIT_TYPEID::TERRAN_SENSORTOWER:      return true;
+		case sc2::UNIT_TYPEID::ZERG_SPAWNINGPOOL:       return true;
+		case sc2::UNIT_TYPEID::ZERG_SPINECRAWLER:       return true;
+		case sc2::UNIT_TYPEID::ZERG_SPIRE:              return true;
+		case sc2::UNIT_TYPEID::ZERG_SPORECRAWLER:       return true;
+		case sc2::UNIT_TYPEID::PROTOSS_STARGATE:        return true;
+		case sc2::UNIT_TYPEID::TERRAN_STARPORT:         return true;
+		case sc2::UNIT_TYPEID::TERRAN_STARPORTREACTOR:  return true;
+		case sc2::UNIT_TYPEID::TERRAN_STARPORTTECHLAB:  return true;
+		case sc2::UNIT_TYPEID::TERRAN_SUPPLYDEPOT:      return true;
+		case sc2::UNIT_TYPEID::PROTOSS_TEMPLARARCHIVE:  return true;
+		case sc2::UNIT_TYPEID::PROTOSS_TWILIGHTCOUNCIL: return true;
+		case sc2::UNIT_TYPEID::ZERG_ULTRALISKCAVERN:    return true;
+		case sc2::UNIT_TYPEID::ZERG_HIVE:               return true;
+		case sc2::UNIT_TYPEID::ZERG_LAIR:               return true;
+		case sc2::UNIT_TYPEID::ZERG_GREATERSPIRE:       return true;
+		case sc2::UNIT_TYPEID::TERRAN_ORBITALCOMMAND:   return true;
+		case sc2::UNIT_TYPEID::TERRAN_PLANETARYFORTRESS: return true;
+		case sc2::UNIT_TYPEID::TERRAN_SUPPLYDEPOTLOWERED: return true;
+		case sc2::UNIT_TYPEID::TERRAN_FACTORYFLYING:	return true;
+		case sc2::UNIT_TYPEID::TERRAN_BARRACKSFLYING:	return true;
+		case sc2::UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING: return true;
+		case sc2::UNIT_TYPEID::TERRAN_ORBITALCOMMANDFLYING: return true;
+		case sc2::UNIT_TYPEID::TERRAN_STARPORTFLYING:	return true;
+		case sc2::UNIT_TYPEID::TERRAN_TECHLAB:			return true;
+
+		default: return false;
+		}
+	}
+};
 
 bool IsUpgrade(sc2::ABILITY_ID ab){
 	
@@ -142,6 +212,19 @@ bool IsUpgrade(sc2::ABILITY_ID ab){
 			return false;
 		}
 	
+}
+
+bool IsExtandable(sc2::ABILITY_ID ab) {
+
+	switch (ab)
+	{
+	case ABILITY_ID::BUILD_BARRACKS:return true;
+	case ABILITY_ID::BUILD_FACTORY:return true;
+	case ABILITY_ID::BUILD_STARPORT:return true;
+	default:
+		return false;
+	}
+
 }
 
 //BUILDINGS
@@ -164,7 +247,7 @@ Mz_Order FusionCore(UNIT_TYPEID::TERRAN_FUSIONCORE, ABILITY_ID::BUILD_FUSIONCORE
 Mz_Order BTechLab(UNIT_TYPEID::TERRAN_TECHLAB, ABILITY_ID::BUILD_TECHLAB, 50, 25, UNIT_TYPEID::TERRAN_BARRACKS);
 Mz_Order STechLab(UNIT_TYPEID::TERRAN_TECHLAB, ABILITY_ID::BUILD_TECHLAB, 50, 25, UNIT_TYPEID::TERRAN_STARPORT);
 Mz_Order FTechLab(UNIT_TYPEID::TERRAN_TECHLAB, ABILITY_ID::BUILD_TECHLAB, 50, 25, UNIT_TYPEID::TERRAN_FACTORY);
-Mz_Order BReactor(UNIT_TYPEID::TERRAN_REACTOR, ABILITY_ID::BUILD_REACTOR_BARRACKS, 50, 50, UNIT_TYPEID::TERRAN_BARRACKS);
+Mz_Order BReactor(UNIT_TYPEID::TERRAN_REACTOR, ABILITY_ID::BUILD_REACTOR, 50, 50, UNIT_TYPEID::TERRAN_BARRACKS);
 Mz_Order SReactor(UNIT_TYPEID::TERRAN_REACTOR, ABILITY_ID::BUILD_REACTOR, 50, 50, UNIT_TYPEID::TERRAN_STARPORT);
 Mz_Order FReactor(UNIT_TYPEID::TERRAN_REACTOR, ABILITY_ID::BUILD_REACTOR, 50, 50, UNIT_TYPEID::TERRAN_FACTORY);
 
@@ -193,19 +276,19 @@ Mz_Order PointDefenseDrone(UNIT_TYPEID::TERRAN_POINTDEFENSEDRONE, ABILITY_ID::EF
 
 //Ability upgrade
 
-Mz_Order CloakingField(UNIT_TYPEID::TERRAN_STARPORTTECHLAB, ABILITY_ID::RESEARCH_BANSHEECLOAKINGFIELD, 100, 100);
-Mz_Order VnSLvL1(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEANDSHIPPLATINGLEVEL1, 100, 100);
-Mz_Order VnSLvL2(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEANDSHIPPLATINGLEVEL2, 100, 100);
-Mz_Order VWLvL1(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEWEAPONSLEVEL1, 100, 100);
-Mz_Order VWLvL2(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEWEAPONSLEVEL2, 100, 100);
-Mz_Order DrillingClaws(UNIT_TYPEID::TERRAN_TECHLAB, ABILITY_ID::RESEARCH_DRILLINGCLAWS, 100, 100);
+Mz_Order CloakingField(UNIT_TYPEID::TERRAN_STARPORTTECHLAB, ABILITY_ID::RESEARCH_BANSHEECLOAKINGFIELD, 100, 100, UNIT_TYPEID::TERRAN_STARPORTTECHLAB);
+Mz_Order VnSLvL1(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEANDSHIPPLATINGLEVEL1, 100, 100, UNIT_TYPEID::TERRAN_ARMORY);
+Mz_Order VnSLvL2(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEANDSHIPPLATINGLEVEL2, 100, 100, UNIT_TYPEID::TERRAN_ARMORY);
+Mz_Order VWLvL1(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEWEAPONSLEVEL1, 100, 100, UNIT_TYPEID::TERRAN_ARMORY);
+Mz_Order VWLvL2(UNIT_TYPEID::TERRAN_ARMORY, ABILITY_ID::RESEARCH_TERRANVEHICLEWEAPONSLEVEL2, 100, 100, UNIT_TYPEID::TERRAN_ARMORY);
+Mz_Order DrillingClaws(UNIT_TYPEID::TERRAN_FACTORYTECHLAB, ABILITY_ID::RESEARCH_DRILLINGCLAWS, 100, 100);
 
 
 
 //Build Order
 std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,Reaper,OrbitalCommand,CommandCenter,Marine,SupplyDepot,Factory,Refinery,
 BReactor,Bunker,OrbitalCommand,Marine,Marine,FTechLab,Cyclone,Starport,Marine,Refinery,SupplyDepot,SiegeTank,STechLab,SupplyDepot,SupplyDepot,
-CloakingField,Banshee,STechLab,CommandCenter,Battlecruiser,EngineeringBay,Battlecruiser,Armory,Armory,Battlecruiser,Refinery,Refinery,Battlecruiser,
+CloakingField,Banshee,SiegeTank,FusionCore,Starport,Banshee,STechLab,CommandCenter,Battlecruiser,EngineeringBay,Battlecruiser,Armory,Armory,Battlecruiser,Refinery,Refinery,Battlecruiser,
 PlanetaryFortress,VnSLvL1,VWLvL1,DrillingClaws,Battlecruiser,SensorTower,Battlecruiser,Starport,WidowMine,CommandCenter,Refinery,Starport,Refinery,
 Battlecruiser,Battlecruiser,VnSLvL2,VWLvL2,STechLab};
 
@@ -219,13 +302,20 @@ Mz_BuildOrder BO = Mz_BuildOrder(UnitOrders, nb_worker);
 Mazzer_bot::Mazzer_bot()
 {
 
-SearchParams.radiuses_ = {6.4f, 8.3f, 7.1f};
-SearchParams.circle_step_size_ = 1.5f;
+SearchParams.radiuses_ = {5.0f,10.0f,15.0f};
+SearchParams.circle_step_size_ = 10.0f;
 SearchParams.cluster_distance_ = 20.0f;
+
+SearchParamsA.radiuses_ = {10.0f,15.0f };
+SearchParamsA.circle_step_size_ = 10.0f;
+SearchParamsA.cluster_distance_ = 20.0f;
 step = 0;
 W_inTraining = 0;
-Construct = false;
-
+Construct = false; 
+nb_vespene=0;
+nb_building_suround=0;
+base_step_vespenes=0;
+base_step_building=0;
 
 }
 void Mazzer_bot::OnGameStart()
@@ -272,7 +362,7 @@ void Mazzer_bot::Follow_BO(Mz_BuildOrder Bo) {
 		Units CC = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
 		for (auto &TH : CC)
 		{
-			
+			std::cout << W_inTraining << std::endl;
 			if (observation->GetMinerals() >= 50) {
 				Actions()->UnitCommand(TH, ABILITY_ID::TRAIN_SCV);
 				W_inTraining += 1;
@@ -287,35 +377,33 @@ void Mazzer_bot::Follow_BO(Mz_BuildOrder Bo) {
 	
 
 }
-void Mazzer_bot::Build_Any(Mz_Order toBuild) {
+bool Mazzer_bot::Build_Any(Mz_Order toBuild) {
 	
 	const ObservationInterface* observation = Observation();
 	Construct = false;
+	//look if the order is already in progree
 	Units Workers = observation->GetUnits(Unit::Alliance::Self, IsUnit(toBuild.Unit_need));
 	for (auto &worker : Workers) {
 
 		for (auto &order : worker->orders) {
-			if (order.ability_id == toBuild.command) {
-				Construct = true;
+			if (order.ability_id == toBuild.command) {    
 				step++;
-				std::cout << step << std::endl;
-				std::cout << W_inTraining << std::endl;
+				return false;
 			}
 		}
 	}
+	//
 	if (observation->GetMinerals() >= toBuild.mineralNeed && observation->GetVespene() >= toBuild.vespenNeed) {
-	
+		
 			if (IsUpgrade(toBuild.command)) {
 				Units Upgrader = observation->GetUnits(Unit::Alliance::Self, IsUnit(toBuild.UnitType));
 				for (auto &Upgrade : Upgrader) {
 					Actions()->UnitCommand(Upgrade, toBuild.command);
-
 				
 				}
 			}
 			else {
 
-				if (!Construct) {
 
 					if (toBuild.UnitType == UNIT_TYPEID::TERRAN_REFINERY) {
 						BuildVespeneG();
@@ -324,18 +412,17 @@ void Mazzer_bot::Build_Any(Mz_Order toBuild) {
 					else if (toBuild.Unit_need != UNIT_TYPEID::TERRAN_SCV) {
 						if (toBuild.UnitType == UNIT_TYPEID::TERRAN_REACTOR || toBuild.UnitType == UNIT_TYPEID::TERRAN_TECHLAB) {
 
-
-
 							Point2D pos;
 
 							const Units NewUnits = Observation()->GetUnits(sc2::Unit::Alliance::Self, IsUnit(toBuild.Unit_need));
 							for (auto &u : NewUnits)
 							{
-								pos = u->pos;     //get command center position
+								pos = u->pos;     
 
 
-
-								Actions()->UnitCommand(u, toBuild.command, pos);
+								 Actions()->UnitCommand(u, toBuild.command, pos);
+								
+								break;
 							}
 						
 						}
@@ -343,7 +430,7 @@ void Mazzer_bot::Build_Any(Mz_Order toBuild) {
 						else {
 						for (auto &worker : Workers) {
 
-							Actions()->UnitCommand(worker, toBuild.command); //build any buildng to a random position near Command center
+							Actions()->UnitCommand(worker, toBuild.command); //build army part of the BO
 
 							break;
 
@@ -370,7 +457,8 @@ void Mazzer_bot::Build_Any(Mz_Order toBuild) {
 
 						Units Workers = observation->GetUnits(Unit::Alliance::Self, IsUnit(toBuild.Unit_need));
 						for (auto &worker : Workers) {
-							if (worker->orders.back().ability_id == ABILITY_ID::HARVEST_GATHER){
+							const Unit * target = observation->GetUnit(worker->orders.back().target_unit_tag); //so vespene geyser don't get empty
+							if (target == nullptr || target->unit_type == UNIT_TYPEID::NEUTRAL_MINERALFIELD){
 
 								Actions()->UnitCommand(worker, toBuild.command, closest_expansion);
 
@@ -391,9 +479,13 @@ void Mazzer_bot::Build_Any(Mz_Order toBuild) {
 
 						const ObservationInterface* observation = Observation();
 
-
-
-						Point2D loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParams);
+						Point2D loc;
+						if (IsExtandable(toBuild.command)) {
+							loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParamsA);
+						}
+						else {
+							loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParams);
+						}
 						Point2D cl = GetNearestVGPos(loc, observation);
 
 						Tag closestWorker = GetNearestWorker(cl, observation);
@@ -403,13 +495,13 @@ void Mazzer_bot::Build_Any(Mz_Order toBuild) {
 
 
 					}
-				}
+				
 			}
 		
 	}
 	
 
-	
+	return true;
 };
 
 void Mazzer_bot::BuildVespeneG() {
@@ -466,7 +558,7 @@ Point2D Mazzer_bot::GetNearestVGPos(sc2::Point2D Location, const ObservationInte
 
 	//only search within this radius
 	float minimum_distance = 15.0f;
-	Point2D closestGeyster;
+	Point2D closestGeyster = Point2D(0,0);
 
 	for (const auto& geyser : geysers) {
 		float current_distance = Distance2D(Location, geyser->pos);
@@ -493,7 +585,8 @@ Tag Mazzer_bot::GetNearestWorker(sc2::Point2D Location, const ObservationInterfa
 	for (const auto& worker : Workers) {
 		float current_distance = Distance2D(Location, worker->pos);
 		if (current_distance < minimum_distance && !worker->orders.empty()) {
-			if (worker->orders.back().ability_id == ABILITY_ID::HARVEST_GATHER) {
+			const Unit * target = observation->GetUnit(worker->orders.back().target_unit_tag); //so vespene geyser don't get empty
+			if (worker->orders.back().ability_id==ABILITY_ID::HARVEST_GATHER) {
 				minimum_distance = current_distance;
 				closestWorker = worker->tag;
 
@@ -516,7 +609,7 @@ void Mazzer_bot::OnBuildingConstructionComplete(const Unit* unit)
 void Mazzer_bot::Fill_refinery(const Unit* unit) {
 	const ObservationInterface* observation = Observation();
 	Units Workers = observation->GetUnits(Unit::Alliance::Self, IsWorker());
-	if (unit->assigned_harvesters < unit->ideal_harvesters) {
+	if (unit->assigned_harvesters <= unit->ideal_harvesters+1) {
 		for (const auto& probe : Workers)
 		{
 			
@@ -646,6 +739,9 @@ size_t CalculateQueriess(float radius, float step_size, const Point2D& center, s
 }
 Point2D Mazzer_bot::GetRandomBuildableLocationFor(sc2::ABILITY_ID Structure, sc2::Point2D Location, QueryType QType, sc2::search::ExpansionParameters parameters)
 {
+
+	
+	
 	// Get the required queries for this cluster.
 	std::vector<QueryInterface::PlacementQuery> queries;
 
@@ -654,24 +750,70 @@ Point2D Mazzer_bot::GetRandomBuildableLocationFor(sc2::ABILITY_ID Structure, sc2
 		query_count += CalculateQueriess(r, parameters.circle_step_size_, Location, Structure, QType, queries);
 	}
 	float distance = std::numeric_limits<float>::max();
-	Point2D closest;
 	std::vector<bool> results = Query()->Placement(queries);
+	std::vector<QueryInterface::PlacementQuery> validqueries;
 	for (size_t j = 0; j < results.size(); ++j)
 	{
 		if (!results[j]) {
 			continue;
 		}
-
-		Point2D& p = queries[j].target_pos;
-
-		float d = Distance2D(p, Location);
-		if (d < distance)
-		{
-			distance = d;
-			closest = p;
-		}
+		validqueries.push_back(queries[j]);
 	}
-	return closest;
+	Point2D place;
+	srand(time(0));
+	if (validqueries.size() < 1)
+	{
+		std::cout << "No valid placement locations \n";
+	}
+	const QueryInterface::PlacementQuery& random_location = GetRandomEntry(validqueries);
+	place = random_location.target_pos;
+	
+	return place;
+}
+
+bool Mazzer_bot::isSurrounded(const Unit* unit) {
+	uint64_t valid_mineral_patch;
+	std::cout << unit->pos.x << std::endl;
+	std::cout<< unit->pos.y << std::endl;
+	FindNearestMineralPatch(unit->pos, valid_mineral_patch);
+	Point2D VG = GetNearestVGPos(unit->pos,Observation());
+	Units buildings = Observation()->GetUnits(Unit::Alliance::Self, IsBuilding());
+	if (Distance2D(Observation()->GetUnit(valid_mineral_patch)->pos, unit->pos) < 5) {
+		return true;
+		
+	}
+	if (Distance2D(VG, unit->pos) < 5) {
+		return true;
+	}
+	for (auto &b : buildings) {
+		if (Distance2D(b->pos, unit->pos) < 5 && Distance2D(b->pos, unit->pos)>0) {
+			return true;
+		}
+		
+	}
+	return false;
+}
+
+Point2D Mazzer_bot::getCloseBase(const Unit * unit) {
+
+	Units Bases = Observation()->GetUnits(Unit::Alliance::Self, IsTownHall());	
+	float minimum_distance = 100.0f;
+	Point2D closestBase;
+	for(auto &base : Bases) {
+	
+
+		
+			float current_distance = Distance2D(unit->pos, base->pos);
+			if (current_distance < minimum_distance) {
+				
+					minimum_distance = current_distance;
+					closestBase = base->pos;
+
+				
+			}
+		
+		return closestBase;
+	}
 }
 
 void Mazzer_bot::SetupRushLocation(const ObservationInterface *observation) {

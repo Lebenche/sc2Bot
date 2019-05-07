@@ -69,13 +69,16 @@ public:
 	void OnBuildingConstructionComplete(const Unit * unit);
 	void BuildVespeneG();
 	void Follow_BO(Mz_BuildOrder);
-	void Build_Any(Mz_Order);
+	bool Build_Any(Mz_Order);
 	void Fill_refinery(const Unit * unit);
 	Tag GetNearestVG(sc2::Point2D Location, const ObservationInterface *observation);
 	Tag GetNearestWorker(sc2::Point2D Location, const ObservationInterface *observation);
 	Point2D GetNearestVGPos(sc2::Point2D Location, const ObservationInterface *observation);
 	void SetupRushLocation(const ObservationInterface *observation);
 	bool FindNearestMineralPatch(const Point2D& start, uint64_t& target);
+
+	bool isSurrounded(const Unit * unit);
+	Point2D getCloseBase(const Unit * unit);
 private:
 	sc2::Point3D *StartPosition;
 	sc2::Point2D RushLocation;
@@ -83,6 +86,10 @@ private:
 	sc2::search::ExpansionParameters SearchParams;
 	sc2::search::ExpansionParameters SearchParamsA;
 	int step;
+	int nb_vespene;
+	int nb_building_suround;
+	int base_step_vespenes;
+	int base_step_building;
 	bool Construct;
 	int32_t W_inTraining;
 	std::vector<Point3D> expansions_;

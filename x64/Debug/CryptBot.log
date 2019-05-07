@@ -1,2 +1,4 @@
 ﻿  Mazzer_bot.cpp
+d:\ia_starcraft\cryptbot\mazzer_bot.cpp(763): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+d:\ia_starcraft\cryptbot\mazzer_bot.cpp(817): warning C4715: 'Mazzer_bot::getCloseBase' : les chemins de contrôle ne retournent pas tous une valeur
   CryptBot.vcxproj -> D:\IA_Starcraft\CryptBot\x64\Debug\CryptBot.exe
