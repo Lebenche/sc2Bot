@@ -4,14 +4,13 @@
 #include "sc2utils/sc2_manage_process.h"
 #include "sc2utils/sc2_arg_parser.h"
 
-#include "Cryptbot.h"
+#include "Mazzer_bot.h"
 #include "LadderInterface.h"
 
 #ifdef DEBUG
 int main(int argc, char* argv[])
 {
-	CryptBot bot;
-	sc2::Coordinator coordinator;
+	Mazzer_bot Mz_bot;	sc2::Coordinator coordinator;
 	if (!coordinator.LoadSettings(argc, argv))
 	{
 		std::cout << "Unable to find or parse settings." << std::endl;
@@ -21,9 +20,9 @@ int main(int argc, char* argv[])
 	coordinator.SetRealtime(false);
 	coordinator.SetMultithreaded(true);
 	coordinator.SetParticipants({
-		CreateParticipant(sc2::Race::Terran, &bot),
+		CreateParticipant(sc2::Race::Terran, &Mz_bot),
 		//sc2::PlayerSetup(sc2::PlayerType::Observer,Util::GetRaceFromString(enemyRaceString)),
-		CreateComputer(sc2::Race::Zerg, sc2::Difficulty::Easy)
+		CreateComputer(sc2::Race::Protoss, sc2::Difficulty::Easy)
 	});
 	// Start the game.
 	coordinator.LaunchStarcraft();

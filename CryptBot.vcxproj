@@ -133,11 +133,13 @@
   <ItemGroup>
     <ClCompile Include="Cryptbot.cpp" />
     <ClCompile Include="CryptbotMain.cpp" />
+    <ClCompile Include="Mazzer_bot.cpp" />
     <ClCompile Include="Strategys.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cryptbot.h" />
     <ClInclude Include="LadderInterface.h" />
+    <ClInclude Include="Mazzer_bot.h" />
     <ClInclude Include="Strategys.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
