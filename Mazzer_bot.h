@@ -24,9 +24,9 @@ typedef struct BattleGroup_s
 
 } BattleGroup;
 
-struct Mz_Order{
-	Mz_Order(UNIT_TYPEID Type, ABILITY_ID c, int32_t mineralN, int32_t VespenN,UNIT_TYPEID needed = UNIT_TYPEID::TERRAN_SCV) :
-		UnitType(Type), command(c), mineralNeed(mineralN), vespenNeed(VespenN), Unit_need(needed){}
+struct Mz_Order {
+	Mz_Order(UNIT_TYPEID Type, ABILITY_ID c, int32_t mineralN, int32_t VespenN, UNIT_TYPEID needed = UNIT_TYPEID::TERRAN_SCV) :
+		UnitType(Type), command(c), mineralNeed(mineralN), vespenNeed(VespenN), Unit_need(needed) {}
 
 	UNIT_TYPEID UnitType;
 	ABILITY_ID command;
@@ -36,11 +36,12 @@ struct Mz_Order{
 };
 
 struct Mz_BuildOrder {
-	Mz_BuildOrder(std::vector<Mz_Order> Order,std::vector<int32_t> nb_w) :
-		UnitOrder(Order),nb_worker(nb_w) {}
+	Mz_BuildOrder(std::vector<Mz_Order> Order, std::vector<int32_t> nb_w,bool isA = false) :
+		UnitOrder(Order), nb_worker(nb_w), isArmy(isA) {}
 
 	std::vector<Mz_Order> UnitOrder;
 	std::vector<int32_t> nb_worker;
+	bool isArmy;
 };
 static const float PI = 3.1415927f;
 
@@ -68,6 +69,10 @@ public:
 	virtual void OnUpgradeCompleted(UpgradeID) {};
 	void OnBuildingConstructionComplete(const Unit * unit);
 	void BuildVespeneG();
+	void AttackBase(const ObservationInterface* observation);
+	void Mazzer_bot::CheckSupply(const ObservationInterface* observation);
+	void Mazzer_bot::TrainArmy(const ObservationInterface* observation);
+	void Mazzer_bot::CheckSCV(const ObservationInterface* observation);
 	void Follow_BO(Mz_BuildOrder);
 	bool Build_Any(Mz_Order);
 	void Fill_refinery(const Unit * unit);
@@ -76,6 +81,7 @@ public:
 	Point2D GetNearestVGPos(sc2::Point2D Location, const ObservationInterface *observation);
 	void SetupRushLocation(const ObservationInterface *observation);
 	bool FindNearestMineralPatch(const Point2D& start, uint64_t& target);
+	bool CheckStep(Mz_Order toCheck,Mz_Order prev,bool isArmy = false, int32_t nb_army = 0);
 
 	bool isSurrounded(const Unit * unit);
 	Point2D getCloseBase(const Unit * unit);
@@ -85,12 +91,17 @@ private:
 	GameInfo *game_info_;
 	sc2::search::ExpansionParameters SearchParams;
 	sc2::search::ExpansionParameters SearchParamsA;
+	int32_t Mazzer_bot::GetCurrentMaxSupply();
 	int step;
+	int check_prev_step;
+	int command_to_count;
 	int nb_vespene;
 	int nb_building_suround;
 	int base_step_vespenes;
 	int base_step_building;
-	bool Construct;
+	bool Construct_check_decrease;
+	bool switchbo;
+	const Unit *isBuild_same;
 	int32_t W_inTraining;
 	std::vector<Point3D> expansions_;
 };
@@ -101,4 +112,3 @@ void DllExport *CreateNewAgent();
 int DllExport GetAgentRace();
 
 const char DllExport *GetAgentName();
-
