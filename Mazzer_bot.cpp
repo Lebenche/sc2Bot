@@ -285,6 +285,89 @@ bool IsABuilding(UNIT_TYPEID Uid) {
 	
 };
 
+bool IsAnArmy(UNIT_TYPEID unit_type) {
+	switch (unit_type)
+	{
+	case UNIT_TYPEID::TERRAN_BANSHEE: return true;
+	case UNIT_TYPEID::TERRAN_BATTLECRUISER: return true;
+	case UNIT_TYPEID::TERRAN_CYCLONE: return true;
+	case UNIT_TYPEID::TERRAN_GHOST: return true;
+	case UNIT_TYPEID::TERRAN_HELLION: return true;
+	case UNIT_TYPEID::TERRAN_HELLIONTANK: return true;
+	case UNIT_TYPEID::TERRAN_LIBERATOR: return true;
+	case UNIT_TYPEID::TERRAN_LIBERATORAG: return true;
+	case UNIT_TYPEID::TERRAN_MARAUDER: return true;
+	case UNIT_TYPEID::TERRAN_MARINE: return true;
+	case UNIT_TYPEID::TERRAN_MEDIVAC: return true;
+	case UNIT_TYPEID::TERRAN_MULE: return true;
+	case UNIT_TYPEID::TERRAN_RAVEN: return true;
+	case UNIT_TYPEID::TERRAN_REAPER: return true;
+	case UNIT_TYPEID::TERRAN_SCV: return true;
+	case UNIT_TYPEID::TERRAN_SIEGETANK: return true;
+	case UNIT_TYPEID::TERRAN_SIEGETANKSIEGED: return true;
+	case UNIT_TYPEID::TERRAN_THOR: return true;
+	case UNIT_TYPEID::TERRAN_THORAP: return true;
+	case UNIT_TYPEID::TERRAN_VIKINGASSAULT: return true;
+	case UNIT_TYPEID::TERRAN_VIKINGFIGHTER: return true;
+	case UNIT_TYPEID::ZERG_BANELING: return true;
+	case UNIT_TYPEID::ZERG_BROODLING: return true;
+	case UNIT_TYPEID::ZERG_BROODLORD: return true;
+	case UNIT_TYPEID::ZERG_BROODLORDCOCOON: return true;
+	case UNIT_TYPEID::ZERG_CHANGELING: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGMARINE: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGMARINESHIELD: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZEALOT: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZERGLING: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZERGLINGWINGS: return true;
+	case UNIT_TYPEID::ZERG_CORRUPTOR: return true;
+	case UNIT_TYPEID::ZERG_DRONE: return true;
+	case UNIT_TYPEID::ZERG_HYDRALISK: return true;
+	case UNIT_TYPEID::ZERG_INFESTEDTERRANSEGG: return true;
+	case UNIT_TYPEID::ZERG_INFESTOR: return true;
+	case UNIT_TYPEID::ZERG_INFESTORTERRAN: return true;
+	case UNIT_TYPEID::ZERG_LOCUSTMP: return true;
+	case UNIT_TYPEID::ZERG_LOCUSTMPFLYING: return true;
+	case UNIT_TYPEID::ZERG_LURKERMP: return true;
+	case UNIT_TYPEID::ZERG_MUTALISK: return true;
+	case UNIT_TYPEID::ZERG_OVERLORD: return true;
+	case UNIT_TYPEID::ZERG_OVERLORDTRANSPORT: return true;
+	case UNIT_TYPEID::ZERG_OVERSEER: return true;
+	case UNIT_TYPEID::ZERG_QUEEN: return true;
+	case UNIT_TYPEID::ZERG_RAVAGER: return true;
+	case UNIT_TYPEID::ZERG_ROACH: return true;
+	case UNIT_TYPEID::ZERG_SPINECRAWLERUPROOTED: return true;
+	case UNIT_TYPEID::ZERG_SPORECRAWLERUPROOTED: return true;
+	case UNIT_TYPEID::ZERG_SWARMHOSTBURROWEDMP: return true;
+	case UNIT_TYPEID::ZERG_SWARMHOSTMP: return true;
+	case UNIT_TYPEID::ZERG_TRANSPORTOVERLORDCOCOON: return true;
+	case UNIT_TYPEID::ZERG_ULTRALISK: return true;
+	case UNIT_TYPEID::ZERG_VIPER: return true;
+	case UNIT_TYPEID::ZERG_ZERGLING: return true;
+	case UNIT_TYPEID::PROTOSS_ADEPT: return true;
+	case UNIT_TYPEID::PROTOSS_ARCHON: return true;
+	case UNIT_TYPEID::PROTOSS_CARRIER: return true;
+	case UNIT_TYPEID::PROTOSS_COLOSSUS: return true;
+	case UNIT_TYPEID::PROTOSS_DARKTEMPLAR: return true;
+	case UNIT_TYPEID::PROTOSS_DISRUPTOR: return true;
+	case UNIT_TYPEID::PROTOSS_HIGHTEMPLAR: return true;
+	case UNIT_TYPEID::PROTOSS_IMMORTAL: return true;
+	case UNIT_TYPEID::PROTOSS_INTERCEPTOR: return true;
+	case UNIT_TYPEID::PROTOSS_MOTHERSHIP: return true;
+	case UNIT_TYPEID::PROTOSS_MOTHERSHIPCORE: return true;
+	case UNIT_TYPEID::PROTOSS_OBSERVER: return true;
+	case UNIT_TYPEID::PROTOSS_ORACLE: return true;
+	case UNIT_TYPEID::PROTOSS_PHOENIX: return true;
+	case UNIT_TYPEID::PROTOSS_PROBE: return true;
+	case UNIT_TYPEID::PROTOSS_SENTRY: return true;
+	case UNIT_TYPEID::PROTOSS_STALKER: return true;
+	case UNIT_TYPEID::PROTOSS_TEMPEST: return true;
+	case UNIT_TYPEID::PROTOSS_VOIDRAY: return true;
+	case UNIT_TYPEID::PROTOSS_WARPPRISM: return true;
+	case UNIT_TYPEID::PROTOSS_ZEALOT: return true;
+	default: return false;
+	}
+}
+
 
 bool IsExtandable(sc2::ABILITY_ID ab) {
 
@@ -416,7 +499,7 @@ Mz_BuildOrder BO = Mz_BuildOrder(UnitOrders, nb_worker);
 bool islift = false;
 bool ismoving = false;
 bool unload = false;
-bool Fleeing = true;
+bool Fleeing = false;
 
 
 Mazzer_bot::Mazzer_bot()
@@ -484,7 +567,7 @@ void Mazzer_bot::OnStep() {
 	if (observation->GetGameLoop() % frames_to_skip != 0) {
 		return;
 	}
-	/*
+	
 	if (!switchbo) {
 		if (step < BO.UnitOrder.size() - 1) {
 			
@@ -508,7 +591,7 @@ void Mazzer_bot::OnStep() {
 			return;
 		}
 	}
-	*/
+	
 	
 
 	
@@ -597,7 +680,7 @@ void Mazzer_bot::CheckSCV(const ObservationInterface* observation) {
 // Fonction qui g�re les attaques sur la base ennemie
 void Mazzer_bot::AttackBase(const ObservationInterface* observation) {
 	const GameInfo& game_info = Observation()->GetGameInfo();
-
+	//AllInAttack(game_info.enemy_start_locations.front());
 	Observation();
 	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
 	Units bunker = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BUNKER));
@@ -985,7 +1068,8 @@ void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 void Mazzer_bot::OnUnitCreated(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER)
 		expansions_ = search::CalculateExpansionLocations(Observation(), Query());
-	
+	if (IsAnArmy(unit->unit_type))
+		AddToBG(unit);
 }
 void OnUpgradeCompleted(UpgradeID) {
 
@@ -1238,16 +1322,16 @@ void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type) {
 void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
 	if (!attack_type) {
 		if (UnitTypeBGExisting(unit->unit_type.ToType())) {
-			for (auto& ThisBG : PerUnitsBG)
-			{
-				if (ThisBG.UnitType == unit->unit_type.ToType() && !ThisBG.Attacking)
+
+			BattleGroup_Unit_type ThisBG = GetUnitTypeBG(unit->unit_type.ToType());
+				if (ThisBG.Attacking)
 				{
 					ThisBG.Members.push_back(unit->tag);
 					ThisBG.health = GetBGHealth(ThisBG.Members);
-					break;
+				
 				}
 
-			}
+			
 		}
 		else {
 			CreateBG(unit, attack_type);
@@ -1258,16 +1342,16 @@ void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
 
 		ATTACK_TYPE AttackType = Strategy::CanAttack(unit->unit_type.ToType());
 		if (AttackTypeBGExisting(AttackType)) {
-			for (auto& ThisBG : PerAttackBG)
-			{
-				if (ThisBG.AttackType == AttackType && !ThisBG.Attacking)
+			BattleGroup_Attack_type ThisBG = GetAttackTypeBG(AttackType);
+			
+				if (!ThisBG.Attacking)
 				{
 					ThisBG.Members.push_back(unit->tag);
 					ThisBG.health = GetBGHealth(ThisBG.Members);
-					break;
+				
 				}
 
-			}
+			
 		}
 		else {
 			CreateBG(unit, attack_type);
