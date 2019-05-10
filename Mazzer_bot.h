@@ -14,15 +14,25 @@ using namespace sc2;
 #define BATTLEGROUP_SIZE 3
 #define CANNONS_PER_PYLON 4
 
-typedef struct BattleGroup_s
+typedef struct BattleGroup_u
 {
 	UNIT_TYPEID UnitType;
 	std::vector<int64_t> Members;
 	bool Attacking;
 	uint64_t engaged_tag;
-	Point2D ScoutingTarget;
+	float health;
 
-} BattleGroup;
+} BattleGroup_Unit_type;
+
+typedef struct BattleGroup_a
+{
+	ATTACK_TYPE AttackType;
+	std::vector<int64_t> Members;
+	bool Attacking;
+	uint64_t engaged_tag;
+	float health;
+
+} BattleGroup_Attack_type;
 
 struct Mz_Order {
 	Mz_Order(UNIT_TYPEID Type, ABILITY_ID c, int32_t mineralN, int32_t VespenN, UNIT_TYPEID needed = UNIT_TYPEID::TERRAN_SCV) :
@@ -85,6 +95,23 @@ public:
 
 	bool isSurrounded(const Unit * unit);
 	Point2D getCloseBase(const Unit * unit);
+
+	void CreateBG(const Unit * unit, bool attack_type = false); //set to unit type by default
+	void AddToBG(const Unit * unit, bool attack_type = false); // Add to a unit type BG by default
+	BattleGroup_Unit_type GetUnitTypeBG(UNIT_TYPEID unit_type); //Use only if BG exist
+	BattleGroup_Attack_type GetAttackTypeBG(ATTACK_TYPE attack_type); //Use only if BG exist
+	void MakeAttackBGAttack(ATTACK_TYPE attack_type, Point2D pos); 
+	void MakeAttackBGAttack(BattleGroup_Attack_type BG, Point2D pos);
+	void MakeUnitBGAttack(UNIT_TYPEID unit_type, Point2D pos);
+	void MakeUnitBGAttack(BattleGroup_Unit_type BG, Point2D pos);
+	float GetBGHealth(std::vector<int64_t> Members);
+	void AllInAttack(Point2D pos);
+	void GeneralRetreat();
+	bool UnitTypeBGExisting(UNIT_TYPEID unit_type);
+	bool AttackTypeBGExisting(ATTACK_TYPE attack_type);
+	void MakeAttackBGRetreat(BattleGroup_Attack_type BG, Point2D pos);
+	void MakeUnitBGRetreat(BattleGroup_Unit_type BG, Point2D pos);
+	void Flee();
 private:
 	sc2::Point3D *StartPosition;
 	sc2::Point2D RushLocation;
@@ -104,6 +131,9 @@ private:
 	const Unit *isBuild_same;
 	int32_t W_inTraining;
 	std::vector<Point3D> expansions_;
+
+	std::vector<BattleGroup_Unit_type>  PerUnitsBG;
+	std::vector<BattleGroup_Attack_type>  PerAttackBG;
 };
 
 

@@ -238,13 +238,14 @@ struct IsGroundArmy {
 };
 
 
-struct IsTownHall {
+struct IsTownHalle {
 	bool operator()(const Unit& unit) {
 		switch (unit.unit_type.ToType()) {
 		case UNIT_TYPEID::ZERG_HATCHERY: return true;
 		case UNIT_TYPEID::ZERG_LAIR: return true;
 		case UNIT_TYPEID::ZERG_HIVE: return true;
 		case UNIT_TYPEID::TERRAN_COMMANDCENTER: return true;
+		case UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMAND: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMANDFLYING: return true;
 		case UNIT_TYPEID::TERRAN_PLANETARYFORTRESS: return true;
@@ -953,7 +954,7 @@ size_t CryptBot::CountUnitType(const ObservationInterface* observation, UnitType
 void CryptBot::EconStrat(const ObservationInterface *observation)
 {
 
-	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHall());
+	Units bases = observation->GetUnits(Unit::Alliance::Self, IsTownHalle());
 	Units NearbyGeasers = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_ASSIMILATOR));
 	Units Probes = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::PROTOSS_PROBE));
 	bool ShouldExpandBase = true;
@@ -1101,7 +1102,7 @@ void CryptBot::CheckScouting(const ObservationInterface *observation)
 	}
 	if (!Scouting)
 	{
-		if (observation->GetUnits(sc2::Unit::Alliance::Enemy, IsTownHall()).empty())
+		if (observation->GetUnits(sc2::Unit::Alliance::Enemy, IsTownHalle()).empty())
 		{
 			if (ScoutingUnitTag != 0)
 			{

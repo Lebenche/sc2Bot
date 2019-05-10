@@ -33,6 +33,7 @@ struct IsTownHall {
 		case UNIT_TYPEID::ZERG_LAIR: return true;
 		case UNIT_TYPEID::ZERG_HIVE: return true;
 		case UNIT_TYPEID::TERRAN_COMMANDCENTER: return true;
+		case UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMAND: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMANDFLYING: return true;
 		case UNIT_TYPEID::TERRAN_PLANETARYFORTRESS: return true;
@@ -412,6 +413,11 @@ std::vector<int32_t> nb_worker = {14,15,16,19,19,20,20,20,20,20,20,20,20,20,20,2
 
 Mz_BuildOrder BO = Mz_BuildOrder(UnitOrders, nb_worker);
 
+bool islift = false;
+bool ismoving = false;
+bool unload = false;
+bool Fleeing = true;
+
 
 Mazzer_bot::Mazzer_bot()
 {
@@ -472,12 +478,13 @@ void Mazzer_bot::OnStep() {
 	//TrainArmy(observation);
 	AttackBase(observation);
 	int frames_to_skip = 4;
-
-
+	if (Fleeing) {
+		Flee();
+	}
 	if (observation->GetGameLoop() % frames_to_skip != 0) {
 		return;
 	}
-	
+	/*
 	if (!switchbo) {
 		if (step < BO.UnitOrder.size() - 1) {
 			
@@ -501,7 +508,7 @@ void Mazzer_bot::OnStep() {
 			return;
 		}
 	}
-	
+	*/
 	
 
 	
@@ -629,7 +636,7 @@ void Mazzer_bot::Follow_BO(Mz_BuildOrder Bo) {
 
 	
 	if (Bo.isArmy) {
-		std::cout << step << std::endl;
+		
 		CheckStep(Bo.UnitOrder[step], Bo.UnitOrder[step], Bo.isArmy, Bo.nb_worker[step]);
 		Build_Any(Bo.UnitOrder[step]);
 	}
@@ -959,7 +966,9 @@ void Mazzer_bot::Fill_refinery(const Unit* unit) {
 	}
 
 }
-void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {};
+void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {
+	
+};
 void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
 		uint64_t valid_mineral_patch;
@@ -970,11 +979,13 @@ void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 			Construct_check_decrease = false;
 		}
 	}
+	
 
 };
 void Mazzer_bot::OnUnitCreated(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER)
 		expansions_ = search::CalculateExpansionLocations(Observation(), Query());
+	
 }
 void OnUpgradeCompleted(UpgradeID) {
 
@@ -1196,5 +1207,275 @@ void Mazzer_bot::SetupRushLocation(const ObservationInterface *observation) {
 	}
 	else
 	{
+	}
+}
+
+//BattleGroups Management functions
+
+void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type) {
+	if (!attack_type) {
+		BattleGroup_Unit_type BG; 
+		BG.Attacking = false;
+		BG.engaged_tag = 0;
+		BG.UnitType = unit->unit_type.ToType();
+		BG.Members.push_back(unit->tag);
+		BG.health = GetBGHealth(BG.Members);
+		PerUnitsBG.push_back(BG);
+	
+	}
+	else {
+		BattleGroup_Attack_type BG;
+		BG.Attacking = false;
+		BG.engaged_tag = 0;
+		BG.AttackType = Strategy::CanAttack(unit->unit_type.ToType());
+		BG.Members.push_back(unit->tag);
+		BG.health = GetBGHealth(BG.Members);
+		PerAttackBG.push_back(BG);
+	}
+	
+}
+
+void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
+	if (!attack_type) {
+		if (UnitTypeBGExisting(unit->unit_type.ToType())) {
+			for (auto& ThisBG : PerUnitsBG)
+			{
+				if (ThisBG.UnitType == unit->unit_type.ToType() && !ThisBG.Attacking)
+				{
+					ThisBG.Members.push_back(unit->tag);
+					ThisBG.health = GetBGHealth(ThisBG.Members);
+					break;
+				}
+
+			}
+		}
+		else {
+			CreateBG(unit, attack_type);
+		}
+
+	}
+	else {
+
+		ATTACK_TYPE AttackType = Strategy::CanAttack(unit->unit_type.ToType());
+		if (AttackTypeBGExisting(AttackType)) {
+			for (auto& ThisBG : PerAttackBG)
+			{
+				if (ThisBG.AttackType == AttackType && !ThisBG.Attacking)
+				{
+					ThisBG.Members.push_back(unit->tag);
+					ThisBG.health = GetBGHealth(ThisBG.Members);
+					break;
+				}
+
+			}
+		}
+		else {
+			CreateBG(unit, attack_type);
+		}
+	}
+}
+
+BattleGroup_Unit_type Mazzer_bot::GetUnitTypeBG(UNIT_TYPEID unit_type) {
+
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (ThisBG.UnitType == unit_type)
+		{
+			return ThisBG;
+		
+		}
+
+	}
+	
+}
+
+BattleGroup_Attack_type Mazzer_bot::GetAttackTypeBG(ATTACK_TYPE attack_type) {
+
+	
+		for (auto& ThisBG : PerAttackBG)
+		{
+			if (ThisBG.AttackType == attack_type)
+			{
+				return ThisBG;
+			}
+
+		}
+		
+
+}
+
+void Mazzer_bot::MakeAttackBGAttack(ATTACK_TYPE attack_type, Point2D pos) {
+	if (AttackTypeBGExisting(attack_type)) {
+		BattleGroup_Attack_type BG = GetAttackTypeBG(attack_type);
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			 const Unit * u = Observation()->GetUnit(member);
+			 Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	}
+
+}
+
+void Mazzer_bot::MakeAttackBGAttack(BattleGroup_Attack_type BG, Point2D pos) {
+	
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			const Unit * u = Observation()->GetUnit(member);
+			Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	}
+
+void Mazzer_bot::MakeUnitBGAttack(UNIT_TYPEID unit_type, Point2D pos) {
+	if (UnitTypeBGExisting(unit_type)) {
+		BattleGroup_Unit_type BG = GetUnitTypeBG(unit_type);
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			const Unit * u = Observation()->GetUnit(member);
+			Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	}
+}
+
+void Mazzer_bot::MakeUnitBGAttack(BattleGroup_Unit_type BG, Point2D pos) {
+	
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			const Unit * u = Observation()->GetUnit(member);
+			Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	
+}
+
+float Mazzer_bot::GetBGHealth(std::vector<int64_t> Members) {
+
+	float hp = 0;
+	for (auto &member : Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		hp += u->health;
+	}
+	return hp;
+}
+
+void Mazzer_bot::AllInAttack(Point2D pos) {
+
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeUnitBGAttack(ThisBG, pos);
+		}
+
+	}
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeAttackBGAttack(ThisBG, pos);
+		}
+
+	}
+}
+
+void Mazzer_bot::GeneralRetreat() {
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeUnitBGRetreat(ThisBG, Observation()->GetStartLocation());
+		}
+
+	}
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeAttackBGRetreat(ThisBG, Observation()->GetStartLocation());
+		}
+
+	}
+}
+
+bool  Mazzer_bot::UnitTypeBGExisting(UNIT_TYPEID unit_type){
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (ThisBG.UnitType == unit_type)
+		{
+			return true;
+
+		}
+
+	}
+	return false;
+}
+
+bool  Mazzer_bot::AttackTypeBGExisting(ATTACK_TYPE attack_type) {
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (ThisBG.AttackType == attack_type)
+		{
+			return true;
+		}
+
+	}
+	return false;
+}
+
+void  Mazzer_bot::MakeAttackBGRetreat(BattleGroup_Attack_type BG, Point2D pos){
+	BG.Attacking = false;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::RALLY_UNITS, pos);
+	}
+}
+
+void  Mazzer_bot::MakeUnitBGRetreat(BattleGroup_Unit_type BG, Point2D pos){
+	BG.Attacking = false
+;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::RALLY_UNITS, pos);
+	}
+}
+
+
+
+void Mazzer_bot::Flee() {
+	Units units = Observation()->GetUnits(Unit::Alliance::Self, IsTownHall());
+	
+	for (auto &u : units) {
+		std::cout << u->unit_type << std::endl;
+		if (u->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER) {
+			if (!islift) {
+				Actions()->UnitCommand(u, ABILITY_ID::LOADALL_COMMANDCENTER);
+				Actions()->UnitCommand(u, ABILITY_ID::LIFT_COMMANDCENTER);
+				islift = true;
+			}
+			if (unload) {
+				Actions()->UnitCommand(u, ABILITY_ID::UNLOADALL);
+				unload = false;
+				Fleeing = false;
+				islift = false;
+				ismoving = false;
+			}
+		}
+		if (u->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING) {
+			if (!ismoving) {
+				float minimum_distance = std::numeric_limits<float>::max();
+				Point3D closest_expansion;
+				for (const auto& expansion : expansions_) {
+					float current_distance = Distance3D(*StartPosition, expansion);
+					if (current_distance < .01f) {
+						continue;
+					}
+
+					if (current_distance < minimum_distance && current_distance > 100) {
+						if (Query()->Placement(ABILITY_ID::LAND_COMMANDCENTER, expansion)) {
+							closest_expansion = expansion;
+							minimum_distance = current_distance;
+						}
+					}
+					Actions()->UnitCommand(u, ABILITY_ID::LAND_COMMANDCENTER, closest_expansion);
+					ismoving = true;
+					unload = true;
+				}
+			}
+		}
+		
 	}
 }
