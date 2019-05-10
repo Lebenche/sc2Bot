@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 
 #include "Mazzer_bot.h"
 #include "sc2api/sc2_api.h"
@@ -33,6 +33,7 @@ struct IsTownHall {
 		case UNIT_TYPEID::ZERG_LAIR: return true;
 		case UNIT_TYPEID::ZERG_HIVE: return true;
 		case UNIT_TYPEID::TERRAN_COMMANDCENTER: return true;
+		case UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMAND: return true;
 		case UNIT_TYPEID::TERRAN_ORBITALCOMMANDFLYING: return true;
 		case UNIT_TYPEID::TERRAN_PLANETARYFORTRESS: return true;
@@ -284,6 +285,89 @@ bool IsABuilding(UNIT_TYPEID Uid) {
 
 };
 
+bool IsAnArmy(UNIT_TYPEID unit_type) {
+	switch (unit_type)
+	{
+	case UNIT_TYPEID::TERRAN_BANSHEE: return true;
+	case UNIT_TYPEID::TERRAN_BATTLECRUISER: return true;
+	case UNIT_TYPEID::TERRAN_CYCLONE: return true;
+	case UNIT_TYPEID::TERRAN_GHOST: return true;
+	case UNIT_TYPEID::TERRAN_HELLION: return true;
+	case UNIT_TYPEID::TERRAN_HELLIONTANK: return true;
+	case UNIT_TYPEID::TERRAN_LIBERATOR: return true;
+	case UNIT_TYPEID::TERRAN_LIBERATORAG: return true;
+	case UNIT_TYPEID::TERRAN_MARAUDER: return true;
+	case UNIT_TYPEID::TERRAN_MARINE: return true;
+	case UNIT_TYPEID::TERRAN_MEDIVAC: return true;
+	case UNIT_TYPEID::TERRAN_MULE: return true;
+	case UNIT_TYPEID::TERRAN_RAVEN: return true;
+	case UNIT_TYPEID::TERRAN_REAPER: return true;
+	case UNIT_TYPEID::TERRAN_SCV: return true;
+	case UNIT_TYPEID::TERRAN_SIEGETANK: return true;
+	case UNIT_TYPEID::TERRAN_SIEGETANKSIEGED: return true;
+	case UNIT_TYPEID::TERRAN_THOR: return true;
+	case UNIT_TYPEID::TERRAN_THORAP: return true;
+	case UNIT_TYPEID::TERRAN_VIKINGASSAULT: return true;
+	case UNIT_TYPEID::TERRAN_VIKINGFIGHTER: return true;
+	case UNIT_TYPEID::ZERG_BANELING: return true;
+	case UNIT_TYPEID::ZERG_BROODLING: return true;
+	case UNIT_TYPEID::ZERG_BROODLORD: return true;
+	case UNIT_TYPEID::ZERG_BROODLORDCOCOON: return true;
+	case UNIT_TYPEID::ZERG_CHANGELING: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGMARINE: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGMARINESHIELD: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZEALOT: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZERGLING: return true;
+	case UNIT_TYPEID::ZERG_CHANGELINGZERGLINGWINGS: return true;
+	case UNIT_TYPEID::ZERG_CORRUPTOR: return true;
+	case UNIT_TYPEID::ZERG_DRONE: return true;
+	case UNIT_TYPEID::ZERG_HYDRALISK: return true;
+	case UNIT_TYPEID::ZERG_INFESTEDTERRANSEGG: return true;
+	case UNIT_TYPEID::ZERG_INFESTOR: return true;
+	case UNIT_TYPEID::ZERG_INFESTORTERRAN: return true;
+	case UNIT_TYPEID::ZERG_LOCUSTMP: return true;
+	case UNIT_TYPEID::ZERG_LOCUSTMPFLYING: return true;
+	case UNIT_TYPEID::ZERG_LURKERMP: return true;
+	case UNIT_TYPEID::ZERG_MUTALISK: return true;
+	case UNIT_TYPEID::ZERG_OVERLORD: return true;
+	case UNIT_TYPEID::ZERG_OVERLORDTRANSPORT: return true;
+	case UNIT_TYPEID::ZERG_OVERSEER: return true;
+	case UNIT_TYPEID::ZERG_QUEEN: return true;
+	case UNIT_TYPEID::ZERG_RAVAGER: return true;
+	case UNIT_TYPEID::ZERG_ROACH: return true;
+	case UNIT_TYPEID::ZERG_SPINECRAWLERUPROOTED: return true;
+	case UNIT_TYPEID::ZERG_SPORECRAWLERUPROOTED: return true;
+	case UNIT_TYPEID::ZERG_SWARMHOSTBURROWEDMP: return true;
+	case UNIT_TYPEID::ZERG_SWARMHOSTMP: return true;
+	case UNIT_TYPEID::ZERG_TRANSPORTOVERLORDCOCOON: return true;
+	case UNIT_TYPEID::ZERG_ULTRALISK: return true;
+	case UNIT_TYPEID::ZERG_VIPER: return true;
+	case UNIT_TYPEID::ZERG_ZERGLING: return true;
+	case UNIT_TYPEID::PROTOSS_ADEPT: return true;
+	case UNIT_TYPEID::PROTOSS_ARCHON: return true;
+	case UNIT_TYPEID::PROTOSS_CARRIER: return true;
+	case UNIT_TYPEID::PROTOSS_COLOSSUS: return true;
+	case UNIT_TYPEID::PROTOSS_DARKTEMPLAR: return true;
+	case UNIT_TYPEID::PROTOSS_DISRUPTOR: return true;
+	case UNIT_TYPEID::PROTOSS_HIGHTEMPLAR: return true;
+	case UNIT_TYPEID::PROTOSS_IMMORTAL: return true;
+	case UNIT_TYPEID::PROTOSS_INTERCEPTOR: return true;
+	case UNIT_TYPEID::PROTOSS_MOTHERSHIP: return true;
+	case UNIT_TYPEID::PROTOSS_MOTHERSHIPCORE: return true;
+	case UNIT_TYPEID::PROTOSS_OBSERVER: return true;
+	case UNIT_TYPEID::PROTOSS_ORACLE: return true;
+	case UNIT_TYPEID::PROTOSS_PHOENIX: return true;
+	case UNIT_TYPEID::PROTOSS_PROBE: return true;
+	case UNIT_TYPEID::PROTOSS_SENTRY: return true;
+	case UNIT_TYPEID::PROTOSS_STALKER: return true;
+	case UNIT_TYPEID::PROTOSS_TEMPEST: return true;
+	case UNIT_TYPEID::PROTOSS_VOIDRAY: return true;
+	case UNIT_TYPEID::PROTOSS_WARPPRISM: return true;
+	case UNIT_TYPEID::PROTOSS_ZEALOT: return true;
+	default: return false;
+	}
+}
+
 
 bool IsExtandable(sc2::ABILITY_ID ab) {
 
@@ -387,15 +471,14 @@ Mz_Order DrillingClaws(UNIT_TYPEID::TERRAN_FACTORYTECHLAB, ABILITY_ID::RESEARCH_
 
 
 //Build Order
-/*std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,SupplyDepot,CommandCenter,Factory,Refinery,Marine,SupplyDepot,Barracks,SupplyDepot};*/
-std::vector<Mz_Order> UnitOrders = { SupplyDepot,Refinery,Barracks,BReactor,Refinery,SupplyDepot,Barracks,BReactor,EngineeringBay,CommandCenter,MissileTurret,Bunker,Refinery,Refinery,Factory,FTechLab,SupplyDepot,Starport,STechLab,SupplyDepot,SupplyDepot };
+std::vector<Mz_Order> UnitOrders = { SupplyDepot,Refinery,Barracks,BReactor,Refinery,SupplyDepot,Barracks,BReactor,EngineeringBay,CommandCenter,MissileTurret,Bunker,Refinery,Refinery,Factory,FTechLab,SupplyDepot,Starport,STechLab,CloakingField,SupplyDepot,SupplyDepot };
 /*MissileTurret,Bunker,SupplyDepot,SupplyDepot,Banshee,SupplyDepot,Marine,FTechLab,EngineeringBay,Marine,SupplyDepot,SiegeTank,Marine,SupplyDepot,Banshee,
 CloakingField,Banshee,SiegeTank,Refinery,Starport,Banshee,STechLab,CommandCenter,Banshee,EngineeringBay,Marine,Armory,SupplyDepot,Marine,Refinery,Refinery,Marine,
 PlanetaryFortress,VnSLvL1,VWLvL1,DrillingClaws,Marine,SensorTower,Marine,Starport,WidowMine,CommandCenter,Refinery,Starport,Refinery,
 Marine,Marine,VnSLvL2,VWLvL2,STechLab };
 */
-std::vector<Mz_Order> UnitOrdersArmy = { Marine,SiegeTank,Banshee,Medivac };
-std::vector<int32_t> nb_Army = { 5,1,1,1 };
+std::vector<Mz_Order> UnitOrdersArmy = { Marine,SiegeTank,Banshee };
+std::vector<int32_t> nb_Army = { 5,2,3,1 };
 Mz_BuildOrder BOA = Mz_BuildOrder(UnitOrdersArmy, nb_Army, true);
 /*
 std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,Reaper,OrbitalCommand,CommandCenter,Marine,SupplyDepot,Factory,Refinery,
@@ -403,6 +486,7 @@ BReactor,Bunker,OrbitalCommand,Marine,Marine,FTechLab,Cyclone,Starport,Marine,Re
 CloakingField,Banshee,SiegeTank,FusionCore,Starport,Banshee,STechLab,CommandCenter,Battlecruiser,EngineeringBay,Battlecruiser,Armory,Armory,Battlecruiser,Refinery,Refinery,Battlecruiser,
 PlanetaryFortress,VnSLvL1,VWLvL1,DrillingClaws,Battlecruiser,SensorTower,Battlecruiser,Starport,WidowMine,CommandCenter,Refinery,Starport,Refinery,
 Battlecruiser,Battlecruiser,VnSLvL2,VWLvL2,STechLab};
+
 std::vector<int32_t> nb_worker = {14,15,16,19,19,20,20,22,23,23,23,25,26,26,26,29,32,32,35,35,38,38,40,45,45,46,47,49,53,58,59,61,67,67,69,69,75,85,85,87,
 87,87,93,101,100,100,100,103,111,111,117,117,119,119,121,130,136,136,136};*/
 
@@ -412,6 +496,11 @@ std::vector<int32_t> nb_worker = { 14,15,16,19,19,20,20,20,20,20,20,20,20,20,20,
 
 Mz_BuildOrder BO = Mz_BuildOrder(UnitOrders, nb_worker);
 
+bool islift = false;
+bool ismoving = false;
+bool unload = false;
+bool Fleeing = false;
+
 
 Mazzer_bot::Mazzer_bot()
 {
@@ -419,6 +508,7 @@ Mazzer_bot::Mazzer_bot()
 	SearchParams.radiuses_ = {5.0f,10.0f};
 	SearchParams.circle_step_size_ = 20.0f;
 	SearchParams.cluster_distance_ = 25.0f;
+
 	SearchParamsA.radiuses_ = {9.0f,14.0f };
 	SearchParamsA.circle_step_size_ = 20.0f;
 	SearchParamsA.cluster_distance_ = 25.0f;*/
@@ -471,8 +561,9 @@ void Mazzer_bot::OnStep() {
 	//TrainArmy(observation);
 	AttackBase(observation);
 	int frames_to_skip = 4;
-	//std::cout<< "step : " << step << "BOA.UnitOrder.size() - 1 : " << BOA.UnitOrder.size() - 1 <<std::endl;
-
+	if (Fleeing) {
+		Flee();
+	}
 	if (observation->GetGameLoop() % frames_to_skip != 0) {
 		return;
 	}
@@ -490,7 +581,7 @@ void Mazzer_bot::OnStep() {
 		}
 	}
 	else {
-		if (step < BOA.UnitOrder.size() - 1 /*step>=7*/) {
+		if (step < BOA.UnitOrder.size() - 1) {
 			Follow_BO(BOA);
 
 		}
@@ -511,7 +602,7 @@ void Mazzer_bot::OnStep() {
 
 
 
-// On recupere le Max supply actuel en comptant ne nombre de depots et de command centers construits 
+// On r�cup�re le Max supply actuel en comptant ne nombre de depots et de command centers construits 
 int32_t Mazzer_bot::GetCurrentMaxSupply()
 {
 	int32_t MaxSupply = 0;
@@ -531,7 +622,7 @@ int32_t Mazzer_bot::GetCurrentMaxSupply()
 	return MaxSupply;
 }
 
-// Ici on cree notre armee 
+// Ici on cr�e notre arm�e 
 void Mazzer_bot::TrainArmy(const ObservationInterface* observation) {
 	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
 	Units barracks = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BARRACKS));
@@ -589,31 +680,32 @@ void Mazzer_bot::CheckSCV(const ObservationInterface* observation) {
 // Fonction qui g�re les attaques sur la base ennemie
 void Mazzer_bot::AttackBase(const ObservationInterface* observation) {
 	const GameInfo& game_info = Observation()->GetGameInfo();
-
+	//AllInAttack(game_info.enemy_start_locations.front());
 	Observation();
 	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
 	Units bunker = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BUNKER));
 	Units banshee = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BANSHEE));
-	Units reaper = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REAPER));
-	/*Point2D point;
-	point.x = bunker[0]->pos.x;
-	point.y = bunker[0]->pos.y; */
+	Units siegeTank = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SIEGETANK));
+	Units siegeTankSieged = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SIEGETANKSIEGED));
 
-	if (marine.size() +reaper.size()>= 2 && bunker.size()>=2)
-	{	
-		std::cout<< "x :" << bunker[0]->pos.x << "  y : " << bunker[0]->pos.y <<std::endl;
-		
-			Actions()->UnitCommand(marine[0], ABILITY_ID::LOAD_BUNKER, Point2D(bunker[0]->pos.x, bunker[0]->pos.y));
-			//Actions()->UnitCommand(reaper, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
-			//Actions()->UnitCommand(bunker, ABILITY_ID::Lo, game_info.enemy_start_locations.front());
-
+	//TERRAN_SIEGETANKSIEGED
+	if (siegeTank.size() >= 1) {
+		//Actions()->UnitCommand(siegeTank[0], ABILITY_ID::BEHAVIOR_CLOAKON, );
+		//siegeTank = siegeTankSieged;
+	}
+	if (marine.size() >= 2/* && bunker.size()>=1*/)
+	{
+		//Actions()->UnitCommand(marine, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
 		//Actions()->UnitCommand(marine, ABILITY_ID::RALLY_BUILDING, bunker.front() );
+		Actions()->UnitCommand(bunker, ABILITY_ID::LOAD_BUNKER,marine[0]);
 
 	}
 	if (banshee.size() >= 3)
 	{
-		Actions()->UnitCommand(banshee, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
+		//Actions()->UnitCommand(banshee, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
 		//Actions()->UnitCommand(marine, ABILITY_ID::RALLY_BUILDING, bunker.front() );
+		Actions()->UnitCommand(banshee, ABILITY_ID::BEHAVIOR_CLOAKON_BANSHEE);
+		Actions()->UnitCommand(banshee, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
 
 	}
 }
@@ -636,7 +728,7 @@ void Mazzer_bot::Follow_BO(Mz_BuildOrder Bo) {
 
 
 	if (Bo.isArmy) {
-		std::cout << step << std::endl;
+
 		CheckStep(Bo.UnitOrder[step], Bo.UnitOrder[step], Bo.isArmy, Bo.nb_worker[step]);
 		Build_Any(Bo.UnitOrder[step]);
 	}
@@ -966,7 +1058,9 @@ void Mazzer_bot::Fill_refinery(const Unit* unit) {
 	}
 
 }
-void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {};
+void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {
+
+};
 void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_SCV) {
 		uint64_t valid_mineral_patch;
@@ -978,10 +1072,13 @@ void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 		}
 	}
 
+
 };
 void Mazzer_bot::OnUnitCreated(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER)
 		expansions_ = search::CalculateExpansionLocations(Observation(), Query());
+	if (IsAnArmy(unit->unit_type))
+		AddToBG(unit);
 }
 void OnUpgradeCompleted(UpgradeID) {
 
@@ -1203,5 +1300,275 @@ void Mazzer_bot::SetupRushLocation(const ObservationInterface *observation) {
 	}
 	else
 	{
+	}
+}
+
+//BattleGroups Management functions
+
+void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type) {
+	if (!attack_type) {
+		BattleGroup_Unit_type BG;
+		BG.Attacking = false;
+		BG.engaged_tag = 0;
+		BG.UnitType = unit->unit_type.ToType();
+		BG.Members.push_back(unit->tag);
+		BG.health = GetBGHealth(BG.Members);
+		PerUnitsBG.push_back(BG);
+
+	}
+	else {
+		BattleGroup_Attack_type BG;
+		BG.Attacking = false;
+		BG.engaged_tag = 0;
+		BG.AttackType = Strategy::CanAttack(unit->unit_type.ToType());
+		BG.Members.push_back(unit->tag);
+		BG.health = GetBGHealth(BG.Members);
+		PerAttackBG.push_back(BG);
+	}
+
+}
+
+void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
+	if (!attack_type) {
+		if (UnitTypeBGExisting(unit->unit_type.ToType())) {
+
+			BattleGroup_Unit_type ThisBG = GetUnitTypeBG(unit->unit_type.ToType());
+			if (ThisBG.Attacking)
+			{
+				ThisBG.Members.push_back(unit->tag);
+				ThisBG.health = GetBGHealth(ThisBG.Members);
+
+			}
+
+
+		}
+		else {
+			CreateBG(unit, attack_type);
+		}
+
+	}
+	else {
+
+		ATTACK_TYPE AttackType = Strategy::CanAttack(unit->unit_type.ToType());
+		if (AttackTypeBGExisting(AttackType)) {
+			BattleGroup_Attack_type ThisBG = GetAttackTypeBG(AttackType);
+
+			if (!ThisBG.Attacking)
+			{
+				ThisBG.Members.push_back(unit->tag);
+				ThisBG.health = GetBGHealth(ThisBG.Members);
+
+			}
+
+
+		}
+		else {
+			CreateBG(unit, attack_type);
+		}
+	}
+}
+
+BattleGroup_Unit_type Mazzer_bot::GetUnitTypeBG(UNIT_TYPEID unit_type) {
+
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (ThisBG.UnitType == unit_type)
+		{
+			return ThisBG;
+
+		}
+
+	}
+
+}
+
+BattleGroup_Attack_type Mazzer_bot::GetAttackTypeBG(ATTACK_TYPE attack_type) {
+
+
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (ThisBG.AttackType == attack_type)
+		{
+			return ThisBG;
+		}
+
+	}
+
+
+}
+
+void Mazzer_bot::MakeAttackBGAttack(ATTACK_TYPE attack_type, Point2D pos) {
+	if (AttackTypeBGExisting(attack_type)) {
+		BattleGroup_Attack_type BG = GetAttackTypeBG(attack_type);
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			const Unit * u = Observation()->GetUnit(member);
+			Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	}
+
+}
+
+void Mazzer_bot::MakeAttackBGAttack(BattleGroup_Attack_type BG, Point2D pos) {
+
+	BG.Attacking = true;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+	}
+}
+
+void Mazzer_bot::MakeUnitBGAttack(UNIT_TYPEID unit_type, Point2D pos) {
+	if (UnitTypeBGExisting(unit_type)) {
+		BattleGroup_Unit_type BG = GetUnitTypeBG(unit_type);
+		BG.Attacking = true;
+		for (auto &member : BG.Members) {
+			const Unit * u = Observation()->GetUnit(member);
+			Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+		}
+	}
+}
+
+void Mazzer_bot::MakeUnitBGAttack(BattleGroup_Unit_type BG, Point2D pos) {
+
+	BG.Attacking = true;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::ATTACK, pos);
+	}
+
+}
+
+float Mazzer_bot::GetBGHealth(std::vector<int64_t> Members) {
+
+	float hp = 0;
+	for (auto &member : Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		hp += u->health;
+	}
+	return hp;
+}
+
+void Mazzer_bot::AllInAttack(Point2D pos) {
+
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeUnitBGAttack(ThisBG, pos);
+		}
+
+	}
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeAttackBGAttack(ThisBG, pos);
+		}
+
+	}
+}
+
+void Mazzer_bot::GeneralRetreat() {
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeUnitBGRetreat(ThisBG, Observation()->GetStartLocation());
+		}
+
+	}
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (!ThisBG.Attacking) {
+			MakeAttackBGRetreat(ThisBG, Observation()->GetStartLocation());
+		}
+
+	}
+}
+
+bool  Mazzer_bot::UnitTypeBGExisting(UNIT_TYPEID unit_type) {
+	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (ThisBG.UnitType == unit_type)
+		{
+			return true;
+
+		}
+
+	}
+	return false;
+}
+
+bool  Mazzer_bot::AttackTypeBGExisting(ATTACK_TYPE attack_type) {
+	for (auto& ThisBG : PerAttackBG)
+	{
+		if (ThisBG.AttackType == attack_type)
+		{
+			return true;
+		}
+
+	}
+	return false;
+}
+
+void  Mazzer_bot::MakeAttackBGRetreat(BattleGroup_Attack_type BG, Point2D pos) {
+	BG.Attacking = false;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::RALLY_UNITS, pos);
+	}
+}
+
+void  Mazzer_bot::MakeUnitBGRetreat(BattleGroup_Unit_type BG, Point2D pos) {
+	BG.Attacking = false
+		;
+	for (auto &member : BG.Members) {
+		const Unit * u = Observation()->GetUnit(member);
+		Actions()->UnitCommand(u, ABILITY_ID::RALLY_UNITS, pos);
+	}
+}
+
+
+
+void Mazzer_bot::Flee() {
+	Units units = Observation()->GetUnits(Unit::Alliance::Self, IsTownHall());
+
+	for (auto &u : units) {
+		std::cout << u->unit_type << std::endl;
+		if (u->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER) {
+			if (!islift) {
+				Actions()->UnitCommand(u, ABILITY_ID::LOADALL_COMMANDCENTER);
+				Actions()->UnitCommand(u, ABILITY_ID::LIFT_COMMANDCENTER);
+				islift = true;
+			}
+			if (unload) {
+				Actions()->UnitCommand(u, ABILITY_ID::UNLOADALL);
+				unload = false;
+				Fleeing = false;
+				islift = false;
+				ismoving = false;
+			}
+		}
+		if (u->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTERFLYING) {
+			if (!ismoving) {
+				float minimum_distance = std::numeric_limits<float>::max();
+				Point3D closest_expansion;
+				for (const auto& expansion : expansions_) {
+					float current_distance = Distance3D(*StartPosition, expansion);
+					if (current_distance < .01f) {
+						continue;
+					}
+
+					if (current_distance < minimum_distance && current_distance > 100) {
+						if (Query()->Placement(ABILITY_ID::LAND_COMMANDCENTER, expansion)) {
+							closest_expansion = expansion;
+							minimum_distance = current_distance;
+						}
+					}
+					Actions()->UnitCommand(u, ABILITY_ID::LAND_COMMANDCENTER, closest_expansion);
+					ismoving = true;
+					unload = true;
+				}
+			}
+		}
+
 	}
 }

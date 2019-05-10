@@ -46,3 +46,9 @@ int main(int argc, char* argv[])
 	return 0;
 }
 #endif
+
+/*
+std::vector<Mz_Order> UnitOrders = { SupplyDepot,Refinery,Barracks,BReactor,Refinery,SupplyDepot,Barracks,BReactor,EngineeringBay,CommandCenter,MissileTurret,Bunker,Refinery,Refinery,Factory,FTechLab,SupplyDepot,Starport,STechLab,SupplyDepot,SupplyDepot };
+			Actions()->UnitCommand(marine[0], ABILITY_ID::LOAD_BUNKER, Point2D(bunker[0]->pos.x, bunker[0]->pos.y));
+
+*/
