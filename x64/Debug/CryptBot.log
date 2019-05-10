@@ -1,4 +1,4 @@
 ﻿  Mazzer_bot.cpp
-c:\users\saidb\documents\github\sc2bot\mazzer_bot.cpp(887): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
-c:\users\saidb\documents\github\sc2bot\mazzer_bot.cpp(941): warning C4715: 'Mazzer_bot::getCloseBase' : les chemins de contrôle ne retournent pas tous une valeur
+c:\users\saidb\documents\github\sc2bot\mazzer_bot.cpp(1092): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+c:\users\saidb\documents\github\sc2bot\mazzer_bot.cpp(1146): warning C4715: 'Mazzer_bot::getCloseBase' : les chemins de contrôle ne retournent pas tous une valeur
   CryptBot.vcxproj -> C:\Users\saidb\Documents\GitHub\sc2Bot\x64\Debug\CryptBot.exe
