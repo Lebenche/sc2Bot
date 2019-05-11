@@ -1063,7 +1063,8 @@ void Mazzer_bot::Fill_refinery(const Unit* unit) {
 
 }
 void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {
-	if (IsAnArmy(unit->unit_type))
+	if (unit->alliance == Unit::Alliance::Enemy)std::cout << "ennemy dead" << std::endl;
+	if (IsAnArmy(unit->unit_type) && unit->alliance == Unit::Alliance::Self)
 		DeleteDeadfromBG(unit);
 };
 void Mazzer_bot::OnUnitIdle(const Unit *unit) {
@@ -1086,7 +1087,7 @@ void Mazzer_bot::OnUnitCreated(const Unit *unit) {
 	if (unit->unit_type == UNIT_TYPEID::TERRAN_COMMANDCENTER)
 		expansions_ = search::CalculateExpansionLocations(Observation(), Query());
 	if (IsAnArmy(unit->unit_type)) {
-		dont_attack = true;
+		Actions()->UnitCommand(unit, ABILITY_ID::MOVE, *StartPosition);
 		AddToBG(unit);
 		
 	}
@@ -1352,7 +1353,7 @@ void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
 						
 						ThisBG.Members.push_back(unit->tag);
 						ThisBG.health = GetBGHealth(ThisBG.Members);
-						std::cout << "Add" << std::endl;
+						
 					}
 				}
 			}
@@ -1557,6 +1558,7 @@ void  Mazzer_bot::MakeUnitBGRetreat(BattleGroup_Unit_type &BG, Point2D pos){
 		const Unit * u = Observation()->GetUnit(member);
 		Actions()->UnitCommand(u, ABILITY_ID::MOVE, pos);
 	}
+	CheckAddBG(BG.UnitType);
 	
 }
 
@@ -1631,12 +1633,13 @@ void Mazzer_bot::CheckAddBG(UNIT_TYPEID unit_type) {
 			{
 				if (ThisBG.UnitType == unit_type)
 				{
-					if (ThisBG.Members.size() < 1) {
+					
 						for (auto& u : units)
 						{
+							if(!IsInBG(u))
 							AddToBG(u);
 						}
-					}
+					
 				}
 			}
 
@@ -1672,7 +1675,7 @@ bool Mazzer_bot::ShouldRetreat(BattleGroup_Unit_type &BG) {
 	
 		float hp = GetBGHealth(BG.Members);
 		if (hp < 0.3*BG.health) {
-			std::cout << "retreat" << std::endl;
+			
 			return true;
 		}
 	
@@ -1685,6 +1688,16 @@ bool  Mazzer_bot::ShouldGO(const Unit * unit) {
 		if (Distance2D(unit->pos, Observation()->GetUnit(m)->pos) > 10)return false;
 	}
 	return true;
+}
+
+bool Mazzer_bot::IsInBG(const Unit * unit) {
+	if (UnitTypeBGExisting(unit->unit_type)) {
+		BattleGroup_Unit_type BG = GetUnitTypeBG(unit->unit_type);
+		for (auto& m : BG.Members) {
+			if (m == unit->tag)return true;
+		}
+	}
+	return false;
 }
 
 

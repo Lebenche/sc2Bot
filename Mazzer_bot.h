@@ -113,6 +113,7 @@ public:
 	void MakeAttackBGRetreat(BattleGroup_Attack_type &BG, Point2D pos);
 	void MakeUnitBGRetreat(BattleGroup_Unit_type &BG, Point2D pos);
 	void Flee();
+	bool IsInBG(const Unit * unit);
 	void DeleteDeadfromBG(const Unit * unit, bool attack_type = false);
 	void CheckAddBG(UNIT_TYPEID unit_type);
 	bool ShouldGO(const Unit * unit);
