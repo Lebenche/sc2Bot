@@ -101,17 +101,22 @@ public:
 	BattleGroup_Unit_type GetUnitTypeBG(UNIT_TYPEID unit_type); //Use only if BG exist
 	BattleGroup_Attack_type GetAttackTypeBG(ATTACK_TYPE attack_type); //Use only if BG exist
 	void MakeAttackBGAttack(ATTACK_TYPE attack_type, Point2D pos); 
-	void MakeAttackBGAttack(BattleGroup_Attack_type BG, Point2D pos);
+	void MakeAttackBGAttack(BattleGroup_Attack_type &BG, Point2D pos);
 	void MakeUnitBGAttack(UNIT_TYPEID unit_type, Point2D pos);
-	void MakeUnitBGAttack(BattleGroup_Unit_type BG, Point2D pos);
+	void MakeUnitBGAttack(BattleGroup_Unit_type &BG, Point2D pos);
 	float GetBGHealth(std::vector<int64_t> Members);
-	void AllInAttack(Point2D pos);
+	bool AllInAttack(Point2D pos);
+	bool ShouldRetreat(BattleGroup_Unit_type &BG);
 	void GeneralRetreat();
 	bool UnitTypeBGExisting(UNIT_TYPEID unit_type);
 	bool AttackTypeBGExisting(ATTACK_TYPE attack_type);
-	void MakeAttackBGRetreat(BattleGroup_Attack_type BG, Point2D pos);
-	void MakeUnitBGRetreat(BattleGroup_Unit_type BG, Point2D pos);
+	void MakeAttackBGRetreat(BattleGroup_Attack_type &BG, Point2D pos);
+	void MakeUnitBGRetreat(BattleGroup_Unit_type &BG, Point2D pos);
 	void Flee();
+	void DeleteDeadfromBG(const Unit * unit, bool attack_type = false);
+	void CheckAddBG(UNIT_TYPEID unit_type);
+	bool ShouldGO(const Unit * unit);
+	void CheckAddBG(ATTACK_TYPE attack_type);
 private:
 	sc2::Point3D *StartPosition;
 	sc2::Point2D RushLocation;
@@ -128,6 +133,8 @@ private:
 	int base_step_building;
 	bool Construct_check_decrease;
 	bool switchbo;
+	bool allIn;
+	bool dont_attack;
 	const Unit *isBuild_same;
 	int32_t W_inTraining;
 	std::vector<Point3D> expansions_;
