@@ -24,6 +24,14 @@ typedef struct BattleGroup_u
 
 } BattleGroup_Unit_type;
 
+typedef struct Building_ennemy
+{
+
+	std::vector<int64_t> Members;
+	std::vector<Point2D> Pos;
+	
+};
+
 typedef struct BattleGroup_b
 {
 	UNIT_TYPEID UnitType;
@@ -129,6 +137,10 @@ public:
 	void CheckAddBG(UNIT_TYPEID unit_type);
 	bool ShouldGO(const Unit * unit);
 	void CheckAddBG(ATTACK_TYPE attack_type);
+
+	void AddEnnemyBuilding(const Unit * unit);
+	void DeleteEnnemyBuilding(const Unit * unit);
+
 private:
 	sc2::Point3D *StartPosition;
 	sc2::Point2D RushLocation;
@@ -155,6 +167,7 @@ private:
 	std::vector<BattleGroup_Unit_type>  PerUnitsBG;
 	std::vector<BattleGroup_Attack_type>  PerAttackBG;
 	std::vector<BattleGroup_Building_type>  PerBuildingBG;
+	Building_ennemy  Ennemy_Buildings;
 };
 
 
