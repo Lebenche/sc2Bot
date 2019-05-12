@@ -61,7 +61,7 @@ struct IsArmy {
 		case UNIT_TYPEID::TERRAN_MULE: return true;
 		case UNIT_TYPEID::TERRAN_RAVEN: return true;
 		case UNIT_TYPEID::TERRAN_REAPER: return true;
-		case UNIT_TYPEID::TERRAN_SCV: return true;
+		//case UNIT_TYPEID::TERRAN_SCV: return true;
 		case UNIT_TYPEID::TERRAN_SIEGETANK: return true;
 		case UNIT_TYPEID::TERRAN_SIEGETANKSIEGED: return true;
 		case UNIT_TYPEID::TERRAN_THOR: return true;
@@ -470,14 +470,18 @@ Mz_Order DrillingClaws(UNIT_TYPEID::TERRAN_FACTORYTECHLAB, ABILITY_ID::RESEARCH_
 
 
 //Build Order
-std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,SupplyDepot,CommandCenter,Factory,Refinery,Marine,SupplyDepot,Barracks,SupplyDepot};
+std::vector<Mz_Order> UnitOrders = { SupplyDepot,Refinery,Barracks,BReactor,Refinery,SupplyDepot,Barracks,BReactor,EngineeringBay,CommandCenter,MissileTurret,Bunker,Refinery,Factory,FTechLab,SupplyDepot,Starport,STechLab,CloakingField,SupplyDepot,SupplyDepot };
+//std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,SupplyDepot,CommandCenter,Factory,Refinery,Marine,SupplyDepot,Barracks,SupplyDepot};
 /*MissileTurret,Bunker,SupplyDepot,SupplyDepot,Banshee,SupplyDepot,Marine,FTechLab,EngineeringBay,Marine,SupplyDepot,SiegeTank,Marine,SupplyDepot,Banshee,
 CloakingField,Banshee,SiegeTank,Refinery,Starport,Banshee,STechLab,CommandCenter,Banshee,EngineeringBay,Marine,Armory,SupplyDepot,Marine,Refinery,Refinery,Marine,
 PlanetaryFortress,VnSLvL1,VWLvL1,DrillingClaws,Marine,SensorTower,Marine,Starport,WidowMine,CommandCenter,Refinery,Starport,Refinery,
 Marine,Marine,VnSLvL2,VWLvL2,STechLab };
-*/
+*//*
 std::vector<Mz_Order> UnitOrdersArmy = {Marine,Reaper};
-std::vector<int32_t> nb_Army = {11,1,11};
+std::vector<int32_t> nb_Army = {11,1,11};*/
+
+std::vector<Mz_Order> UnitOrdersArmy = { Marine,SiegeTank,Banshee,Marine };
+std::vector<int32_t> nb_Army = { 5,2,3,1 };
 Mz_BuildOrder BOA = Mz_BuildOrder(UnitOrdersArmy, nb_Army,true);
 /*
 std::vector<Mz_Order> UnitOrders = {SupplyDepot,Barracks,Refinery,Reaper,OrbitalCommand,CommandCenter,Marine,SupplyDepot,Factory,Refinery,
@@ -490,7 +494,7 @@ std::vector<int32_t> nb_worker = {14,15,16,19,19,20,20,22,23,23,23,25,26,26,26,2
 87,87,93,101,100,100,100,103,111,111,117,117,119,119,121,130,136,136,136};*/
 
 
-std::vector<int32_t> nb_worker = {14,15,16,19,19,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
+std::vector<int32_t> nb_worker = {14,15,16,19,19,20,21,21,22,22,23,24,24,24,25,27,28,28,28,28,30,32,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,
 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 };
 
 Mz_BuildOrder BO = Mz_BuildOrder(UnitOrders, nb_worker);
@@ -513,12 +517,15 @@ SearchParamsA.circle_step_size_ = 20.0f;
 SearchParamsA.cluster_distance_ = 25.0f;*/
 	
 	SearchParams.radiuses_ = { 10.0f,10.0f,15.0f };
-	SearchParams.circle_step_size_ = 20.0f;
+	SearchParams.circle_step_size_ =20.0f;
 	SearchParams.cluster_distance_ = 25.0f;
 
-	SearchParamsA.radiuses_ = { 10.0f,15.0f };
+	SearchParamsA.radiuses_ = {10.0,11.3f,15.0f};
 	SearchParamsA.circle_step_size_ = 20.0f;
 	SearchParamsA.cluster_distance_ = 25.0f;
+	SearchParamsB.radiuses_ = { 18.0f,20.f };
+	SearchParamsB.circle_step_size_ = 20.0f;
+	SearchParamsB.cluster_distance_ = 25.0f;
 	step = 0;
 	W_inTraining = 0;
 	Construct_check_decrease = false;
@@ -592,6 +599,7 @@ void Mazzer_bot::OnStep() {
 		}
 	}
 	else {
+		//CheckSupply(Observation());
 		if (step < BOA.UnitOrder.size() - 1) {
 			Follow_BO(BOA);
 			
@@ -693,24 +701,32 @@ void Mazzer_bot::AttackBase(const ObservationInterface* observation) {
 	const GameInfo& game_info = Observation()->GetGameInfo();
 	//AllInAttack(game_info.enemy_start_locations.front());
 	Observation();
-	Units marine = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_MARINE));
+	Units all = observation->GetUnits(Unit::Alliance::Self, IsArmy());
 	Units bunker = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BUNKER));
 	Units banshee = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_BANSHEE));
 	if (UnitTypeBGExisting(UNIT_TYPEID::TERRAN_MARINE)) {
 	BattleGroup_Unit_type BG = GetUnitTypeBG(UNIT_TYPEID::TERRAN_MARINE);
 	if (BG.Members.size() >= 3/* && bunker.size()>=1*/)
 	{
-		allIn = AllInAttack(game_info.enemy_start_locations.front());
+		//allIn = AllInAttack(game_info.enemy_start_locations.front());
 		//Actions()->UnitCommand(marine, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
 		//Actions()->UnitCommand(marine, ABILITY_ID::RALLY_BUILDING, bunker.front() );
 
 	}
-}
-	if (banshee.size() >= 3)
-	{
-		Actions()->UnitCommand(banshee, ABILITY_ID::ATTACK, game_info.enemy_start_locations.front());
-		//Actions()->UnitCommand(marine, ABILITY_ID::RALLY_BUILDING, bunker.front() );
 
+}	
+	if (UnitTypeBGExisting(UNIT_TYPEID::TERRAN_BANSHEE)) {
+		BattleGroup_Unit_type BG2 = GetUnitTypeBG(UNIT_TYPEID::TERRAN_BANSHEE);
+
+		if (BG2.Members.size() >= 3)
+		{
+			MakeUnitBGAttack(UNIT_TYPEID::TERRAN_BANSHEE, game_info.enemy_start_locations.front());
+			//Actions()->UnitCommand(marine, ABILITY_ID::RALLY_BUILDING, bunker.front() );
+
+		}
+	}
+	if (all.size() >= 25) {
+		allIn = AllInAttack(game_info.enemy_start_locations.front());
 	}
 }
 
@@ -718,7 +734,7 @@ void Mazzer_bot::AttackBase(const ObservationInterface* observation) {
 void Mazzer_bot::CheckSupply(const ObservationInterface* observation) {
 	Units depot = observation->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_SUPPLYDEPOT));
 	if (observation->GetFoodUsed() >= GetCurrentMaxSupply() - 4 && depot.size() >= 1) {
-		//Build_Any(SupplyDepot);
+		Build_Any(SupplyDepot);
 		//std::cout << "checked";
 	}
 }
@@ -901,6 +917,9 @@ bool Mazzer_bot::Build_Any(Mz_Order toBuild) {
 				if (IsExtandable(toBuild.command)) {
 					loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParamsA);
 				}
+				else if(toBuild.command == ABILITY_ID::BUILD_BUNKER){
+					loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParamsB);
+				}
 				else {
 					loc = GetRandomBuildableLocationFor(toBuild.command, pos, QueryType::None, SearchParams);
 				}
@@ -1031,7 +1050,7 @@ void Mazzer_bot::OnBuildingConstructionComplete(const Unit* unit)
 void Mazzer_bot::Fill_refinery(const Unit* unit) {
 	const ObservationInterface* observation = Observation();
 	Units Workers = observation->GetUnits(Unit::Alliance::Self, IsWorker());
-	if (unit->assigned_harvesters <= unit->ideal_harvesters + 1) {
+	if (unit->assigned_harvesters < unit->ideal_harvesters-1) {
 		for (const auto& probe : Workers)
 		{
 
@@ -1062,6 +1081,14 @@ void Mazzer_bot::Fill_refinery(const Unit* unit) {
 	}
 
 }
+
+void Mazzer_bot::Fill_All_Refinery() {
+	Units Ref = Observation()->GetUnits(Unit::Alliance::Self, IsUnit(UNIT_TYPEID::TERRAN_REFINERY));
+	for (auto& r : Ref) {
+		Fill_refinery(r);
+	}
+}
+
 void Mazzer_bot::OnUnitDestroyed(const Unit *unit) {
 	if (unit->alliance == Unit::Alliance::Enemy)std::cout << "ennemy dead" << std::endl;
 	if (IsAnArmy(unit->unit_type) && unit->alliance == Unit::Alliance::Self)
@@ -1079,7 +1106,7 @@ void Mazzer_bot::OnUnitIdle(const Unit *unit) {
 	}
 	if (IsAnArmy(unit->unit_type)) {
 		BattleGroup_Unit_type BG = GetUnitTypeBG(unit->unit_type);
-		if(!BG.Attacking && ShouldGO(unit))allIn = true;
+		if(!BG.Attacking && ShouldGO(unit))MakeUnitBGAttack(unit->unit_type,game_info_->enemy_start_locations.front());
 		
 	}
 };
@@ -1091,11 +1118,15 @@ void Mazzer_bot::OnUnitCreated(const Unit *unit) {
 		AddToBG(unit);
 		
 	}
+	if (IsABuilding(unit->unit_type))Fill_All_Refinery();
 }
 void OnUpgradeCompleted(UpgradeID) {
 
 }
-void Mazzer_bot::OnUnitEnterVision(const Unit *unit) {};
+void Mazzer_bot::OnUnitEnterVision(const Unit *unit) {
+
+
+};
 
 bool Mazzer_bot::FindNearestMineralPatch(const Point2D& start, uint64_t& target) {
 	Units units = Observation()->GetUnits(Unit::Alliance::Neutral);
@@ -1209,6 +1240,36 @@ Point2D Mazzer_bot::GetRandomBuildableLocationFor(sc2::ABILITY_ID Structure, sc2
 	return place;
 }
 
+Point2D Mazzer_bot::GetNearestBuildableLocationFor(sc2::ABILITY_ID Structure, sc2::Point2D Location, QueryType QType, sc2::search::ExpansionParameters parameters)
+{
+	// Get the required queries for this cluster.
+	std::vector<QueryInterface::PlacementQuery> queries;
+
+	size_t query_count = 0;
+	for (auto r : parameters.radiuses_) {
+		query_count += CalculateQueriess(r, parameters.circle_step_size_, Location, Structure, QType, queries);
+	}
+	float distance = std::numeric_limits<float>::max();
+	Point2D closest;
+	std::vector<bool> results = Query()->Placement(queries);
+	for (size_t j = 0; j < results.size(); ++j)
+	{
+		if (!results[j]) {
+			continue;
+		}
+
+		Point2D& p = queries[j].target_pos;
+
+		float d = Distance2D(p, Location);
+		if (d < distance)
+		{
+			distance = d;
+			closest = p;
+		}
+	}
+	return closest;
+}
+
 bool Mazzer_bot::isSurrounded(const Unit* unit) {
 	uint64_t valid_mineral_patch;
 	//std::cout << unit->pos.x << std::endl;
@@ -1317,16 +1378,24 @@ void Mazzer_bot::SetupRushLocation(const ObservationInterface *observation) {
 
 //BattleGroups Management functions
 
-void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type) {
+void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type , bool isBuilding) {
 	if (!attack_type) {
-		BattleGroup_Unit_type BG; 
-		BG.Attacking = false;
-		BG.engaged_tag = 0;
-		BG.UnitType = unit->unit_type.ToType();
-		BG.Members.push_back(unit->tag);
-		BG.health = GetBGHealth(BG.Members);
-		PerUnitsBG.push_back(BG);
-	
+		if (!isBuilding) {
+			BattleGroup_Unit_type BG;
+			BG.Attacking = false;
+			BG.engaged_tag = 0;
+			BG.UnitType = unit->unit_type.ToType();
+			BG.Members.push_back(unit->tag);
+			BG.health = GetBGHealth(BG.Members);
+			PerUnitsBG.push_back(BG);
+		}
+		else {
+			BattleGroup_Building_type BG;
+			BG.UnitType = unit->unit_type.ToType();
+			BG.Members.push_back(unit->tag);
+			BG.health = GetBGHealth(BG.Members);
+			PerBuildingBG.push_back(BG);
+		}
 	}
 	else {
 		BattleGroup_Attack_type BG;
@@ -1340,28 +1409,46 @@ void Mazzer_bot::CreateBG(const Unit *unit, bool attack_type) {
 	
 }
 
-void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
+void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type, bool isBuilding) {
 	if (!attack_type) {
-		if (UnitTypeBGExisting(unit->unit_type.ToType())) {
+		if(!isBuilding){
+			if (UnitTypeBGExisting(unit->unit_type.ToType())) {
 
-			for (auto& ThisBG : PerUnitsBG)
-			{
-				if (ThisBG.UnitType == unit->unit_type)
+				for (auto& ThisBG : PerUnitsBG)
 				{
-					if (!ThisBG.Attacking)
+					if (ThisBG.UnitType == unit->unit_type)
 					{
-						
-						ThisBG.Members.push_back(unit->tag);
-						ThisBG.health = GetBGHealth(ThisBG.Members);
-						
+						if (!ThisBG.Attacking)
+						{
+
+							ThisBG.Members.push_back(unit->tag);
+							ThisBG.health = GetBGHealth(ThisBG.Members);
+
+						}
+					}
+				}
+
+			}
+			else {
+				if (BuildingTypeBGExisting(unit->unit_type.ToType())) {
+
+					for (auto& ThisBG : PerBuildingBG)
+					{
+						if (ThisBG.UnitType == unit->unit_type)
+						{
+
+
+							ThisBG.Members.push_back(unit->tag);
+							ThisBG.health = GetBGHealth(ThisBG.Members);
+
+
+						}
 					}
 				}
 			}
-
-			
 		}
 		else {
-			CreateBG(unit, attack_type);
+			CreateBG(unit, attack_type, isBuilding);
 		}
 
 	}
@@ -1386,7 +1473,7 @@ void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
 			
 		}
 		else {
-			CreateBG(unit, attack_type);
+			CreateBG(unit, attack_type, isBuilding);
 		}
 	}
 }
@@ -1404,6 +1491,20 @@ void Mazzer_bot::AddToBG(const Unit * unit, bool attack_type) {
 	}
 	
 }
+ BattleGroup_Building_type  Mazzer_bot::GetBuildingTypeBG(UNIT_TYPEID unit_type) {
+
+	 for (auto& ThisBG : PerBuildingBG)
+	 {
+		 if (ThisBG.UnitType == unit_type)
+		 {
+			 return ThisBG;
+
+		 }
+
+	 }
+
+ }
+
 
 BattleGroup_Attack_type Mazzer_bot::GetAttackTypeBG(ATTACK_TYPE attack_type) {
 
@@ -1520,6 +1621,19 @@ void Mazzer_bot::GeneralRetreat() {
 
 bool  Mazzer_bot::UnitTypeBGExisting(UNIT_TYPEID unit_type){
 	for (auto& ThisBG : PerUnitsBG)
+	{
+		if (ThisBG.UnitType == unit_type)
+		{
+			return true;
+
+		}
+
+	}
+	return false;
+}
+
+bool  Mazzer_bot::BuildingTypeBGExisting(UNIT_TYPEID unit_type) {
+	for (auto& ThisBG : PerBuildingBG)
 	{
 		if (ThisBG.UnitType == unit_type)
 		{

@@ -24,6 +24,14 @@ typedef struct BattleGroup_u
 
 } BattleGroup_Unit_type;
 
+typedef struct BattleGroup_b
+{
+	UNIT_TYPEID UnitType;
+	std::vector<int64_t> Members;
+	float health;
+
+} BattleGroup_Building_type;
+
 typedef struct BattleGroup_a
 {
 	ATTACK_TYPE AttackType;
@@ -86,6 +94,7 @@ public:
 	void Follow_BO(Mz_BuildOrder);
 	bool Build_Any(Mz_Order);
 	void Fill_refinery(const Unit * unit);
+	void Fill_All_Refinery();
 	Tag GetNearestVG(sc2::Point2D Location, const ObservationInterface *observation);
 	Tag GetNearestWorker(sc2::Point2D Location, const ObservationInterface *observation);
 	Point2D GetNearestVGPos(sc2::Point2D Location, const ObservationInterface *observation);
@@ -96,9 +105,10 @@ public:
 	bool isSurrounded(const Unit * unit);
 	Point2D getCloseBase(const Unit * unit);
 
-	void CreateBG(const Unit * unit, bool attack_type = false); //set to unit type by default
-	void AddToBG(const Unit * unit, bool attack_type = false); // Add to a unit type BG by default
+	void CreateBG(const Unit * unit, bool attack_type = false, bool isBuilding = false); //set to unit type by default
+	void AddToBG(const Unit * unit, bool attack_type = false, bool isBuilding = false); // Add to a unit type BG by default
 	BattleGroup_Unit_type GetUnitTypeBG(UNIT_TYPEID unit_type); //Use only if BG exist
+	BattleGroup_Building_type GetBuildingTypeBG(UNIT_TYPEID unit_type); //Use only if BG exist
 	BattleGroup_Attack_type GetAttackTypeBG(ATTACK_TYPE attack_type); //Use only if BG exist
 	void MakeAttackBGAttack(ATTACK_TYPE attack_type, Point2D pos); 
 	void MakeAttackBGAttack(BattleGroup_Attack_type &BG, Point2D pos);
@@ -109,6 +119,7 @@ public:
 	bool ShouldRetreat(BattleGroup_Unit_type &BG);
 	void GeneralRetreat();
 	bool UnitTypeBGExisting(UNIT_TYPEID unit_type);
+	bool BuildingTypeBGExisting(UNIT_TYPEID unit_type);
 	bool AttackTypeBGExisting(ATTACK_TYPE attack_type);
 	void MakeAttackBGRetreat(BattleGroup_Attack_type &BG, Point2D pos);
 	void MakeUnitBGRetreat(BattleGroup_Unit_type &BG, Point2D pos);
@@ -124,6 +135,7 @@ private:
 	GameInfo *game_info_;
 	sc2::search::ExpansionParameters SearchParams;
 	sc2::search::ExpansionParameters SearchParamsA;
+	sc2::search::ExpansionParameters SearchParamsB;
 	int32_t Mazzer_bot::GetCurrentMaxSupply();
 	int step;
 	int check_prev_step;
@@ -142,6 +154,7 @@ private:
 
 	std::vector<BattleGroup_Unit_type>  PerUnitsBG;
 	std::vector<BattleGroup_Attack_type>  PerAttackBG;
+	std::vector<BattleGroup_Building_type>  PerBuildingBG;
 };
 
 
