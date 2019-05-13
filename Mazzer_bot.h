@@ -111,6 +111,7 @@ public:
 	bool CheckStep(Mz_Order toCheck,Mz_Order prev,bool isArmy = false, int32_t nb_army = 0);
 
 	bool isSurrounded(const Unit * unit);
+	bool isSurrounded(Point2D pos);
 	Point2D getCloseBase(const Unit * unit);
 
 	void CreateBG(const Unit * unit, bool attack_type = false, bool isBuilding = false); //set to unit type by default
@@ -158,6 +159,7 @@ private:
 	int base_step_building;
 	bool Construct_check_decrease;
 	bool switchbo;
+	bool startBot;
 	bool allIn;
 	bool dont_attack;
 	const Unit *isBuild_same;
