@@ -135,9 +135,11 @@ public:
 	void Flee();
 	bool IsInBG(const Unit * unit);
 	void DeleteDeadfromBG(const Unit * unit, bool attack_type = false);
+	void DeleteDestroyBuildingfromBG(const Unit * unit);
 	void CheckAddBG(UNIT_TYPEID unit_type);
 	bool ShouldGO(const Unit * unit);
 	void CheckAddBG(ATTACK_TYPE attack_type);
+	void Expand();
 
 	void AddEnnemyBuilding(const Unit * unit);
 	void DeleteEnnemyBuilding(const Unit * unit);
@@ -161,7 +163,8 @@ private:
 	bool switchbo;
 	bool startBot;
 	bool allIn;
-	bool dont_attack;
+	bool onload;
+	bool Bo_secours;
 	const Unit *isBuild_same;
 	int32_t W_inTraining;
 	std::vector<Point3D> expansions_;
